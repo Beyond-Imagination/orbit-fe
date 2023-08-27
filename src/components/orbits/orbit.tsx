@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from 'react'
 
 import { IOrbit } from '@/types'
-import { Check, Edit, Stop, Trash } from '@/icon'
+import { Check, Edit, PaperAirplane, Stop, Trash } from '@/icon'
 
 interface OrbitProps {
     orbit: IOrbit
@@ -34,6 +34,9 @@ function ReadMode({ orbit, setMode }: ModeProps) {
                 </div>
                 <div className="basis-1/8">
                     <div className="flex space-x-2">
+                        <button type="button" className="w-6 h-6">
+                            <PaperAirplane />
+                        </button>
                         <button type="button" onClick={() => setMode('write')} className="w-6 h-6">
                             <Edit />
                         </button>
