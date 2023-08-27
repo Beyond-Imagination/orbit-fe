@@ -1,7 +1,10 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
+import getUserAccessToken from '@/services/space/auth'
 import OrbitList from '@/components/orbits/orbitList'
-import { IOrbit } from '@/types'
+import { IOrbit, AccessToken } from '@/types'
 
 // temp orbit list
 const list: IOrbit[] = [
@@ -35,6 +38,16 @@ const list: IOrbit[] = [
 ]
 
 export default function Home() {
+    const [accessToken, setAccessToken] = useState<AccessToken>()
+
+    console.log(accessToken)
+
+    useEffect(() => {
+        getUserAccessToken().then((data: AccessToken) => {
+            setAccessToken(data)
+        })
+    }, [])
+
     return (
         <main className="flex flex-col items-center justify-between p-4">
             <OrbitList orbits={list} />
