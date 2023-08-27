@@ -15,7 +15,6 @@ interface ModeProps {
 function ReadMode({ orbit, setMode }: ModeProps) {
     return (
         <div className="w-full">
-            <p>Read Mode</p>
             <div className="flex flex-row">
                 <div className="basis-1/4">
                     <p>channel name</p>
@@ -35,10 +34,10 @@ function ReadMode({ orbit, setMode }: ModeProps) {
                 </div>
                 <div className="basis-1/8">
                     <div className="flex space-x-2">
-                        <button type="button" onClick={() => setMode('write')}>
+                        <button type="button" onClick={() => setMode('write')} className="w-6 h-6">
                             <Edit />
                         </button>
-                        <button type="button">
+                        <button type="button" className="w-6 h-6">
                             <Trash />
                         </button>
                     </div>
@@ -55,7 +54,6 @@ function ReadMode({ orbit, setMode }: ModeProps) {
 function WriteMode({ orbit, setMode }: ModeProps) {
     return (
         <div className="w-full">
-            <p>Write Mode</p>
             <div className="flex flex-row">
                 <div className="basis-1/4">
                     <p>channel name</p>
@@ -75,10 +73,10 @@ function WriteMode({ orbit, setMode }: ModeProps) {
                 </div>
                 <div className="basis-1/8">
                     <div className="flex space-x-2">
-                        <button type="button" onClick={() => setMode('read')}>
+                        <button type="button" onClick={() => setMode('read')} className="w-6 h-6">
                             <Stop />
                         </button>
-                        <button type="button">
+                        <button type="button" className="w-6 h-6">
                             <Check />
                         </button>
                     </div>
