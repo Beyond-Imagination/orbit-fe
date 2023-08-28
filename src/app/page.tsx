@@ -43,8 +43,8 @@ export default function Home() {
     console.log(accessToken)
 
     useEffect(() => {
-        getUserAccessToken().then((data: AccessToken) => {
-            setAccessToken(data)
+        getUserAccessToken().then(data => {
+            setAccessToken(data as AccessToken)
         })
     }, [])
 
