@@ -7,3 +7,7 @@ export interface IOrbit {
     cron: string
     message: string
 }
+
+export interface IGetOrbitResponse {
+    orbits: IOrbit[]
+}

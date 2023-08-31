@@ -1,46 +1,15 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
-import getUserAccessToken from '@/services/space/auth'
+import { AccessToken } from '@/types'
 import OrbitList from '@/components/orbits/orbitList'
-import { IOrbit, AccessToken } from '@/types'
-
-// temp orbit list
-const list: IOrbit[] = [
-    {
-        id: '1',
-        format: 'cron',
-        mode: 'read',
-        channelName: 'test 1',
-        timezone: 'Asia/Seoul',
-        cron: '* * * * *',
-        message: 'message 1',
-    },
-    {
-        id: '2',
-        format: 'cron',
-        mode: 'write',
-        channelName: 'test 2',
-        timezone: 'Asia/Seoul',
-        cron: '* * * * *',
-        message: 'message 2',
-    },
-    {
-        id: '3',
-        format: 'cron',
-        mode: 'read',
-        channelName: 'test 3',
-        timezone: 'Asia/Seoul',
-        cron: '* * * * *',
-        message: 'message 3',
-    },
-]
+import getUserAccessToken from '@/services/space/auth'
 
 export default function Home() {
-    const [accessToken, setAccessToken] = useState<AccessToken>()
-
-    console.log(accessToken)
+    const [accessToken, setAccessToken] = useState<AccessToken>(null)
+    const queryClient = new QueryClient()
 
     useEffect(() => {
         getUserAccessToken().then(data => {
@@ -49,8 +18,12 @@ export default function Home() {
     }, [])
 
     return (
-        <main className="flex flex-col items-center justify-between p-4">
-            <OrbitList orbits={list} />
-        </main>
+        <QueryClientProvider client={queryClient}>
+            <main className="flex flex-col items-center justify-between p-4">
+                {
+                    accessToken ? <OrbitList accessToken={accessToken} /> : <div>error</div> // TODO: error 처리
+                }
+            </main>
+        </QueryClientProvider>
     )
 }
