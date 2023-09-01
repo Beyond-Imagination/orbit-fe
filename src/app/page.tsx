@@ -8,7 +8,7 @@ import OrbitList from '@/components/orbits/orbitList'
 import getUserAccessToken from '@/services/space/auth'
 
 export default function Home() {
-    const [accessToken, setAccessToken] = useState<AccessToken>(null)
+    const [accessToken, setAccessToken] = useState<AccessToken | null>(null)
     const queryClient = new QueryClient()
 
     useEffect(() => {

@@ -1,8 +1,10 @@
+import { QueryFunctionContext } from 'react-query'
+
 import { SERVER_URL } from '@/config'
-import { IGetOrbitResponse } from '@/types'
+import { AccessToken, IGetOrbitResponse } from '@/types'
 
 // eslint-disable-next-line
-export async function getOrbits({ queryKey }): Promise<IGetOrbitResponse> {
+export async function getOrbits({ queryKey }: QueryFunctionContext<[string, AccessToken]>): Promise<IGetOrbitResponse> {
     const [, { token, serverUrl }] = queryKey
     const query = new URLSearchParams({ serverUrl })
     const res = await fetch(`${SERVER_URL}/v1/orbits?${query}`, {
