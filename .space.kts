@@ -34,7 +34,7 @@ job("Build and deploy") {
                 aws --version
 
                 export AWS_ACCESS_KEY_ID=${'$'}AWS_ACCESS_KEY_ID
-                export AWS_ACCESS_KEY_SECRET=${'$'}AWS_ACCESS_KEY_SECRET
+                export AWS_SECRET_ACCESS_KEY=${'$'}AWS_ACCESS_KEY_SECRET
                 export AWS_DEFAULT_REGION=ap-northeast-2
 
                 echo ${'$'}JB_SPACE_GIT_BRANCH
