@@ -1,9 +1,9 @@
 import { useQuery } from 'react-query'
 
 import { AccessToken } from '@/types'
-import Orbit from '@/components/orbits/orbit'
-import AddButton from '@/components/orbits/addButton'
 import { getOrbits } from '@/api/orbit'
+import Orbit from '@/components/orbits/orbit'
+import OrbitAdd from '@/components/orbits/orbitAdd'
 
 interface OrbitListProps {
     accessToken: AccessToken
@@ -24,7 +24,7 @@ export default function OrbitList({ accessToken }: OrbitListProps) {
             {data.orbits.map(orbit => (
                 <Orbit key={orbit.id} orbit={orbit} />
             ))}
-            <AddButton />
+            <OrbitAdd key="add" />
         </div>
     )
 }

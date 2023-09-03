@@ -1,8 +1,13 @@
 import { Plus } from '@/icon'
+import { Dispatch, SetStateAction } from 'react'
 
-export default function AddButton() {
+interface AddButtonProps {
+    setAdding: Dispatch<SetStateAction<boolean>>
+}
+
+export default function AddButton({ setAdding }: AddButtonProps) {
     return (
-        <button type="button" className="w-full h-32 border-2 rounded-lg flex items-center justify-center">
+        <button type="button" onClick={() => setAdding(true)} className="w-full h-32 border-2 rounded-lg flex items-center justify-center">
             <div className="w-16 h-16">
                 <Plus />
             </div>
