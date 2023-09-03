@@ -1,5 +1,5 @@
 export interface IOrbit {
-    id: string
+    id?: string
     format: string
     channelName: string
     timezone: string
@@ -9,4 +9,18 @@ export interface IOrbit {
 
 export interface IGetOrbitResponse {
     orbits: IOrbit[]
+}
+
+export interface IPostOrbitRequest {
+    body: {
+        format: string
+        channel: string
+        timezone: string
+        cron: string
+        message: string
+        serverUrl: string
+    }
+    secret: {
+        token: string
+    }
 }

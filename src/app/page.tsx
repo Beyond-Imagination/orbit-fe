@@ -21,7 +21,7 @@ export default function Home() {
         <QueryClientProvider client={queryClient}>
             <main className="flex flex-col items-center justify-between p-4">
                 {
-                    accessToken ? <OrbitList accessToken={accessToken} /> : <div>error</div> // TODO: error 처리
+                    accessToken ? <OrbitList accessToken={accessToken} /> : <div>loading</div> // TODO: error 처리
                 }
             </main>
         </QueryClientProvider>

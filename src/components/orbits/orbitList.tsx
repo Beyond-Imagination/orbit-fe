@@ -16,15 +16,15 @@ export default function OrbitList({ accessToken }: OrbitListProps) {
 
     // TODO: 에러처리 변경
     if (error || isFetching || !data) {
-        return <div>error</div>
+        return <div>loading</div>
     }
 
     return (
         <div className="flex flex-col space-y-2 w-full">
             {data.orbits.map(orbit => (
-                <Orbit key={orbit.id} orbit={orbit} />
+                <Orbit key={orbit.id} orbit={orbit} accessToken={accessToken} />
             ))}
-            <OrbitAdd key="add" />
+            <OrbitAdd key="add" accessToken={accessToken} />
         </div>
     )
 }
