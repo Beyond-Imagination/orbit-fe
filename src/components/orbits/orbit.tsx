@@ -16,7 +16,7 @@ export default function Orbit({ orbit, accessToken }: OrbitProps) {
             {isUpdating ? (
                 <OrbitUpdate orbit={orbit} setUpdating={setUpdating} accessToken={accessToken} />
             ) : (
-                <OrbitRead orbit={orbit} setUpdating={setUpdating} />
+                <OrbitRead orbit={orbit} setUpdating={setUpdating} accessToken={accessToken} />
             )}
         </div>
     )

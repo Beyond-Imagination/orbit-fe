@@ -1,13 +1,27 @@
-import { Edit, PaperAirplane, Trash } from '@/icon'
-import { IOrbit } from '@/types'
 import { Dispatch, SetStateAction } from 'react'
+import { useMutation, useQueryClient } from 'react-query'
+
+import { AccessToken, IDeleteOrbitRequest, IOrbit } from '@/types'
+import { deleteOrbit } from '@/api/orbit'
+import { Edit, PaperAirplane, Trash } from '@/icon'
 
 interface OrbitReadProps {
     orbit: IOrbit
     setUpdating: Dispatch<SetStateAction<boolean>>
+    accessToken: AccessToken
 }
 
-export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
+export default function OrbitRead({ orbit, setUpdating, accessToken }: OrbitReadProps) {
+    const queryClient = useQueryClient()
+    const mutation = useMutation({
+        mutationFn: (request: IDeleteOrbitRequest) => {
+            return deleteOrbit(request)
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['orbits'] })
+        },
+    })
+
     return (
         <div className="flex flex-col gap-2">
             <div className="flex justify-between">
@@ -39,7 +53,11 @@ export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
                         <button type="button" onClick={() => setUpdating(true)} className="w-6 h-6">
                             <Edit />
                         </button>
-                        <button type="button" className="w-6 h-6">
+                        <button
+                            type="button"
+                            onClick={() => mutation.mutate({ uri: { id: orbit._id }, secret: { token: accessToken.token } })}
+                            className="w-6 h-6"
+                        >
                             <Trash />
                         </button>
                     </div>

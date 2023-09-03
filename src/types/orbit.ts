@@ -41,3 +41,12 @@ export interface IPutOrbitRequest {
         token: string
     }
 }
+
+export interface IDeleteOrbitRequest {
+    uri: {
+        id: string
+    }
+    secret: {
+        token: string
+    }
+}
