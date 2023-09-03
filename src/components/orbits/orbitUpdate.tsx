@@ -19,6 +19,7 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['orbits'] })
+            setUpdating(false)
         },
     })
 
@@ -48,7 +49,6 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
             },
         }
         mutation.mutate(request)
-        setUpdating(false)
     }
 
     return (
