@@ -22,7 +22,7 @@ export default function OrbitList({ accessToken }: OrbitListProps) {
     return (
         <div className="flex flex-col space-y-2 w-full">
             {data.orbits.map(orbit => (
-                <Orbit key={orbit.id} orbit={orbit} accessToken={accessToken} />
+                <Orbit key={orbit._id} orbit={orbit} accessToken={accessToken} />
             ))}
             <OrbitAdd key="add" accessToken={accessToken} />
         </div>

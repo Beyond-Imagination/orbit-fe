@@ -1,7 +1,7 @@
 import { QueryFunctionContext } from 'react-query'
 
 import { SERVER_URL } from '@/config'
-import { AccessToken, IGetOrbitResponse, IPostOrbitRequest } from '@/types'
+import { AccessToken, IGetOrbitResponse, IPostOrbitRequest, IPutOrbitRequest } from '@/types'
 
 // eslint-disable-next-line
 export async function getOrbits({ queryKey }: QueryFunctionContext<[string, AccessToken]>): Promise<IGetOrbitResponse> {
@@ -22,6 +22,17 @@ export async function getOrbits({ queryKey }: QueryFunctionContext<[string, Acce
 export async function postOrbit(request: IPostOrbitRequest): Promise<void> {
     const res = await fetch(`${SERVER_URL}/v1/orbits`, {
         method: 'POST',
+        headers: { Authorization: `Bearer ${request.secret.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(request.body),
+    })
+    if (!res.ok) {
+        throw new Error('network response was not ok')
+    }
+}
+
+export async function putOrbit(request: IPutOrbitRequest): Promise<void> {
+    const res = await fetch(`${SERVER_URL}/v1/orbits/${request.uri.id}`, {
+        method: 'PUT',
         headers: { Authorization: `Bearer ${request.secret.token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify(request.body),
     })

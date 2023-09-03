@@ -11,10 +11,13 @@ interface OrbitProps {
 
 export default function Orbit({ orbit, accessToken }: OrbitProps) {
     const [isUpdating, setUpdating] = useState<boolean>(false)
-    console.log(accessToken)
     return (
         <div className="border-2 border-[#9C4A98] rounded p-2 w-full">
-            {isUpdating ? <OrbitUpdate orbit={orbit} setUpdating={setUpdating} /> : <OrbitRead orbit={orbit} setUpdating={setUpdating} />}
+            {isUpdating ? (
+                <OrbitUpdate orbit={orbit} setUpdating={setUpdating} accessToken={accessToken} />
+            ) : (
+                <OrbitRead orbit={orbit} setUpdating={setUpdating} />
+            )}
         </div>
     )
 }
