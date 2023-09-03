@@ -50,3 +50,15 @@ export interface IDeleteOrbitRequest {
         token: string
     }
 }
+
+export interface ISendOrbitRequest {
+    body: {
+        serverUrl: string
+    }
+    uri: {
+        id: string
+    }
+    secret: {
+        token: string
+    }
+}

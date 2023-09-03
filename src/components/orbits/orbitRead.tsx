@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 
 import { AccessToken, IDeleteOrbitRequest, IOrbit } from '@/types'
-import { deleteOrbit } from '@/api/orbit'
+import { deleteOrbit, sendOrbit } from '@/api/orbit'
 import { Edit, PaperAirplane, Trash } from '@/icon'
 
 interface OrbitReadProps {
@@ -47,7 +47,17 @@ export default function OrbitRead({ orbit, setUpdating, accessToken }: OrbitRead
                 </div>
                 <div className="basis-2/12">
                     <div className="flex gap-2 justify-end">
-                        <button type="button" className="w-6 h-6">
+                        <button
+                            type="button"
+                            onClick={() =>
+                                sendOrbit({
+                                    body: { serverUrl: accessToken.serverUrl },
+                                    uri: { id: orbit._id },
+                                    secret: { token: accessToken.token },
+                                })
+                            }
+                            className="w-6 h-6"
+                        >
                             <PaperAirplane />
                         </button>
                         <button type="button" onClick={() => setUpdating(true)} className="w-6 h-6">
