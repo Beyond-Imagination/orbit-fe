@@ -34,7 +34,7 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
         return <AddButton setAdding={setAdding} />
     }
 
-    function submit(e: React.MouseEvent<HTMLElement>) {
+    function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         const request: IPostOrbitRequest = {
             body: {
@@ -54,7 +54,7 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
 
     return (
         <div className=" border-2 border-[#9C4A98] rounded p-2 w-full">
-            <form className="">
+            <form onSubmit={onSubmit}>
                 <div className="flex justify-between">
                     <div className="basis-10/12 flex gap-6">
                         <div className="w-40">
@@ -109,7 +109,7 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
                             <button type="button" onClick={() => setAdding(false)} className="w-6 h-6">
                                 <Stop />
                             </button>
-                            <button type="submit" onClick={(e: React.MouseEvent<HTMLElement>) => submit(e)} className="w-6 h-6">
+                            <button type="submit" className="w-6 h-6">
                                 <Check />
                             </button>
                         </div>

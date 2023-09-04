@@ -30,7 +30,7 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
     const [cron, setCron] = useState<string>(orbit.cron)
     const [message, setMessage] = useState<string>(orbit.message)
 
-    function submit(e: React.MouseEvent<HTMLElement>) {
+    function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         const request: IPutOrbitRequest = {
             body: {
@@ -53,7 +53,7 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
 
     return (
         <div className="flex flex-col gap-2">
-            <form>
+            <form onSubmit={onSubmit}>
                 <div className="flex justify-between">
                     <div className="basis-10/12 flex gap-6">
                         <div className="w-40">
@@ -108,7 +108,7 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
                             <button type="button" onClick={() => setUpdating(false)} className="w-6 h-6">
                                 <Stop />
                             </button>
-                            <button type="submit" onClick={(e: React.MouseEvent<HTMLElement>) => submit(e)} className="w-6 h-6">
+                            <button type="submit" className="w-6 h-6">
                                 <Check />
                             </button>
                         </div>
