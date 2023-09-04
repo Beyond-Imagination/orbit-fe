@@ -12,6 +12,7 @@ interface OrbitListProps {
 export default function OrbitList({ accessToken }: OrbitListProps) {
     const { data, error, isFetching } = useQuery(['orbits', accessToken], getOrbits, {
         enabled: !!accessToken,
+        refetchOnWindowFocus: false,
     })
 
     // TODO: 에러처리 변경
