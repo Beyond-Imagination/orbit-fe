@@ -75,7 +75,7 @@ export default function OrbitRead({ orbit, setUpdating, accessToken }: OrbitRead
             </div>
             <div>
                 <p className="text-lg font-semibold">message</p>
-                <div className="border rounded p-2">{orbit.message}</div>
+                <pre className="border rounded p-2">{orbit.message}</pre>
             </div>
         </div>
     )
