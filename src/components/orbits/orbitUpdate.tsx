@@ -30,6 +30,8 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
     const [cron, setCron] = useState<string>(orbit.cron)
     const [message, setMessage] = useState<string>(orbit.message)
 
+    const timezoneList = Intl.supportedValuesOf('timeZone')
+
     function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         const request: IPutOrbitRequest = {
@@ -86,8 +88,11 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
                                     id={`${orbit._id}/TimezoneSelect`}
                                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTimezone(e.target.value)}
                                     className="border rounded w-full p-1"
+                                    defaultValue={timezone}
                                 >
-                                    <option>ETC/UTC</option>
+                                    {timezoneList.map(value => (
+                                        <option key={`${orbit._id}/${value}`}>{value}</option>
+                                    ))}
                                 </select>
                             </label>
                         </div>

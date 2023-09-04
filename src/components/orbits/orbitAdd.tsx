@@ -30,6 +30,8 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
     const [cron, setCron] = useState<string>('')
     const [message, setMessage] = useState<string>('')
 
+    const timezoneList = Intl.supportedValuesOf('timeZone')
+
     if (!adding) {
         return <AddButton setAdding={setAdding} />
     }
@@ -88,7 +90,9 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
                                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTimezone(e.target.value)}
                                     className="border rounded w-full p-1"
                                 >
-                                    <option>ETC/UTC</option>
+                                    {timezoneList.map(value => (
+                                        <option key={`add/${value}`}>{value}</option>
+                                    ))}
                                 </select>
                             </label>
                         </div>
