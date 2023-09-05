@@ -103,7 +103,7 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
                                     id="add/CronInput"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCron(e.target.value)}
                                     className="border rounded w-full p-1"
-                                    placeholder="cron"
+                                    placeholder="* * * * *"
                                 />
                             </label>
                         </div>
