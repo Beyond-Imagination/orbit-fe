@@ -58,7 +58,7 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
             <form onSubmit={onSubmit}>
                 <div className="flex justify-between">
                     <div className="basis-10/12 flex gap-6">
-                        <div className="w-40">
+                        <div className="w-44">
                             <label htmlFor={`${orbit._id}/ChannelNameInput`} className="text-lg font-semibold">
                                 Channel Name
                                 <input
@@ -81,7 +81,7 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
                                 </select>
                             </label>
                         </div>
-                        <div className="w-32">
+                        <div className="w-68">
                             <label htmlFor={`${orbit._id}/TimezoneSelect`} className="text-lg font-semibold">
                                 timezone
                                 <select
@@ -96,7 +96,7 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
                                 </select>
                             </label>
                         </div>
-                        <div className="w-56">
+                        <div className="w-44">
                             <label htmlFor={`${orbit._id}/CronInput`} className="text-lg font-semibold">
                                 cron
                                 <input
