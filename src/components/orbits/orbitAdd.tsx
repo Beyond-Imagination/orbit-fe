@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
+import { useForm, SubmitHandler } from 'react-hook-form'
 
 import { AccessToken, IPostOrbitRequest } from '@/types'
 import { postOrbit } from '@/api/orbit'
@@ -8,6 +9,14 @@ import AddButton from '@/components/orbits/addButton'
 
 interface OrbitAddProps {
     accessToken: AccessToken
+}
+
+type Inputs = {
+    channelName: string
+    format: string
+    timezone: string
+    cron: string
+    message: string
 }
 
 export default function OrbitAdd({ accessToken }: OrbitAddProps) {
@@ -20,31 +29,18 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
             queryClient.invalidateQueries({ queryKey: ['orbits'] })
         },
     })
-
+    const { register, handleSubmit } = useForm<Inputs>()
     const [adding, setAdding] = useState<boolean>(false)
-
-    // orbit form
-    const [channelName, setChannelName] = useState<string>('')
-    const [format, setFormat] = useState<string>('cron')
-    const [timezone, setTimezone] = useState<string>('ETC/UTC')
-    const [cron, setCron] = useState<string>('')
-    const [message, setMessage] = useState<string>('')
-
     const timezoneList = Intl.supportedValuesOf('timeZone')
 
-    if (!adding) {
-        return <AddButton setAdding={setAdding} />
-    }
-
-    function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault()
+    const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
         const request: IPostOrbitRequest = {
             body: {
-                channel: channelName,
-                format,
-                timezone,
-                cron,
-                message,
+                channel: data.channelName,
+                format: data.format,
+                timezone: data.timezone,
+                cron: data.cron,
+                message: data.message,
                 serverUrl: accessToken.serverUrl,
             },
             secret: {
@@ -54,9 +50,13 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
         mutation.mutate(request)
     }
 
+    if (!adding) {
+        return <AddButton setAdding={setAdding} />
+    }
+
     return (
         <div className=" border-2 border-[#9C4A98] rounded p-2 w-full">
-            <form onSubmit={onSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex justify-between">
                     <div className="basis-10/12 flex gap-6">
                         <div className="w-44">
@@ -64,20 +64,16 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
                                 Channel Name
                                 <input
                                     id="add/ChannelNameInput"
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setChannelName(e.target.value)}
                                     className="border rounded w-full p-1"
                                     placeholder="your channel name"
+                                    {...register('channelName')}
                                 />
                             </label>
                         </div>
                         <div className="w-32">
                             <label htmlFor="add/FormatSelect" className="text-lg font-semibold">
                                 Format
-                                <select
-                                    id="add/FormatSelect"
-                                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormat(e.target.value)}
-                                    className="border rounded w-full p-1"
-                                >
+                                <select id="add/FormatSelect" className="border rounded w-full p-1" {...register('format')}>
                                     <option>cron</option>
                                 </select>
                             </label>
@@ -85,11 +81,7 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
                         <div className="w-68">
                             <label htmlFor="add/TimezoneSelect" className="text-lg font-semibold">
                                 timezone
-                                <select
-                                    id="add/TimezoneSelect"
-                                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTimezone(e.target.value)}
-                                    className="border rounded w-full p-1"
-                                >
+                                <select id="add/TimezoneSelect" className="border rounded w-full p-1" {...register('timezone')}>
                                     {timezoneList.map(value => (
                                         <option key={`add/${value}`}>{value}</option>
                                     ))}
@@ -99,12 +91,7 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
                         <div className="w-44">
                             <label htmlFor="add/CronInput" className="text-lg font-semibold">
                                 cron
-                                <input
-                                    id="add/CronInput"
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCron(e.target.value)}
-                                    className="border rounded w-full p-1"
-                                    placeholder="* * * * *"
-                                />
+                                <input id="add/CronInput" className="border rounded w-full p-1" placeholder="* * * * *" {...register('cron')} />
                             </label>
                         </div>
                     </div>
@@ -122,12 +109,7 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
                 <div>
                     <label htmlFor="add/MessageTextarea" className="flex flex-col text-lg font-semibold">
                         message
-                        <textarea
-                            id="add/MessageTextarea"
-                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)}
-                            className="border rounded p-2"
-                            placeholder="write your message"
-                        />
+                        <textarea id="add/MessageTextarea" className="border rounded p-2" placeholder="write your message" {...register('message')} />
                     </label>
                 </div>
             </form>

@@ -1,5 +1,6 @@
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
+import { SubmitHandler, useForm } from 'react-hook-form'
 
 import { AccessToken, IOrbit, IPutOrbitRequest } from '@/types'
 import { Check, Stop } from '@/icon'
@@ -9,6 +10,14 @@ interface OrbitUpdateProps {
     orbit: IOrbit
     setUpdating: Dispatch<SetStateAction<boolean>>
     accessToken: AccessToken
+}
+
+type Inputs = {
+    channelName: string
+    format: string
+    timezone: string
+    cron: string
+    message: string
 }
 
 export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUpdateProps) {
@@ -22,25 +31,25 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
             setUpdating(false)
         },
     })
-
-    // orbit form
-    const [channelName, setChannelName] = useState<string>(orbit.channelName)
-    const [format, setFormat] = useState<string>(orbit.format)
-    const [timezone, setTimezone] = useState<string>(orbit.timezone)
-    const [cron, setCron] = useState<string>(orbit.cron)
-    const [message, setMessage] = useState<string>(orbit.message)
-
+    const { register, watch, handleSubmit } = useForm<Inputs>({
+        defaultValues: {
+            channelName: orbit.channelName,
+            format: orbit.format,
+            timezone: orbit.timezone,
+            cron: orbit.cron,
+            message: orbit.message,
+        },
+    })
     const timezoneList = Intl.supportedValuesOf('timeZone')
 
-    function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault()
+    const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
         const request: IPutOrbitRequest = {
             body: {
-                channel: channelName,
-                format,
-                timezone,
-                cron,
-                message,
+                channel: data.channelName,
+                format: data.format,
+                timezone: data.timezone,
+                cron: data.cron,
+                message: data.message,
                 serverUrl: accessToken.serverUrl,
             },
             uri: {
@@ -55,7 +64,7 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
 
     return (
         <div className="flex flex-col gap-2">
-            <form onSubmit={onSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex justify-between">
                     <div className="basis-10/12 flex gap-6">
                         <div className="w-44">
@@ -63,9 +72,9 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
                                 Channel Name
                                 <input
                                     id={`${orbit._id}/ChannelNameInput`}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setChannelName(e.target.value)}
                                     className="border rounded w-full p-1"
-                                    value={channelName}
+                                    value={watch('channelName')}
+                                    {...register('channelName')}
                                 />
                             </label>
                         </div>
@@ -74,8 +83,9 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
                                 Format
                                 <select
                                     id={`${orbit._id}/FormatSelect`}
-                                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFormat(e.target.value)}
                                     className="border rounded w-full p-1"
+                                    defaultValue={watch('format')}
+                                    {...register('format')}
                                 >
                                     <option>cron</option>
                                 </select>
@@ -86,9 +96,9 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
                                 timezone
                                 <select
                                     id={`${orbit._id}/TimezoneSelect`}
-                                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTimezone(e.target.value)}
                                     className="border rounded w-full p-1"
-                                    defaultValue={timezone}
+                                    defaultValue={watch('timezone')}
+                                    {...register('timezone')}
                                 >
                                     {timezoneList.map(value => (
                                         <option key={`${orbit._id}/${value}`}>{value}</option>
@@ -101,9 +111,9 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
                                 cron
                                 <input
                                     id={`${orbit._id}/CronInput`}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCron(e.target.value)}
                                     className="border rounded w-full p-1"
-                                    value={cron}
+                                    value={watch('cron')}
+                                    {...register('cron')}
                                 />
                             </label>
                         </div>
@@ -124,9 +134,9 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
                         message
                         <textarea
                             id={`${orbit._id}/MessageTextarea`}
-                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)}
                             className="border rounded p-2"
-                            value={message}
+                            value={watch('message')}
+                            {...register('message')}
                         />
                     </label>
                 </div>
