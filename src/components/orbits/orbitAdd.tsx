@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { isValidCron } from 'cron-validator'
 
 import { AccessToken, IPostOrbitRequest } from '@/types'
 import { postOrbit } from '@/api/orbit'
 import { Check, Stop } from '@/icon'
 import AddButton from '@/components/orbits/addButton'
+import ErrorAlert from '@/components/alerts/error'
 
 interface OrbitAddProps {
     accessToken: AccessToken
@@ -29,9 +31,14 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
             queryClient.invalidateQueries({ queryKey: ['orbits'] })
         },
     })
-    const { register, handleSubmit } = useForm<Inputs>()
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<Inputs>()
     const [adding, setAdding] = useState<boolean>(false)
     const timezoneList = Intl.supportedValuesOf('timeZone')
+    const errorMessage: string | undefined = errors?.channelName?.message || errors?.cron?.message || errors?.message?.message
 
     const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
         const request: IPostOrbitRequest = {
@@ -66,14 +73,18 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
                                     id="add/ChannelNameInput"
                                     className="border rounded w-full p-1"
                                     placeholder="your channel name"
-                                    {...register('channelName')}
+                                    {...register('channelName', { required: 'channel name is required' })}
                                 />
                             </label>
                         </div>
                         <div className="w-32">
                             <label htmlFor="add/FormatSelect" className="text-lg font-semibold">
                                 Format
-                                <select id="add/FormatSelect" className="border rounded w-full p-1" {...register('format')}>
+                                <select
+                                    id="add/FormatSelect"
+                                    className="border rounded w-full p-1"
+                                    {...register('format', { required: 'format is required' })}
+                                >
                                     <option>cron</option>
                                 </select>
                             </label>
@@ -81,7 +92,11 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
                         <div className="w-68">
                             <label htmlFor="add/TimezoneSelect" className="text-lg font-semibold">
                                 timezone
-                                <select id="add/TimezoneSelect" className="border rounded w-full p-1" {...register('timezone')}>
+                                <select
+                                    id="add/TimezoneSelect"
+                                    className="border rounded w-full p-1"
+                                    {...register('timezone', { required: 'timezone is required' })}
+                                >
                                     {timezoneList.map(value => (
                                         <option key={`add/${value}`}>{value}</option>
                                     ))}
@@ -91,7 +106,12 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
                         <div className="w-44">
                             <label htmlFor="add/CronInput" className="text-lg font-semibold">
                                 cron
-                                <input id="add/CronInput" className="border rounded w-full p-1" placeholder="* * * * *" {...register('cron')} />
+                                <input
+                                    id="add/CronInput"
+                                    className="border rounded w-full p-1"
+                                    placeholder="* * * * *"
+                                    {...register('cron', { validate: value => isValidCron(value, { alias: true }) || 'invalid cron format' })}
+                                />
                             </label>
                         </div>
                     </div>
@@ -109,9 +129,15 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
                 <div>
                     <label htmlFor="add/MessageTextarea" className="flex flex-col text-lg font-semibold">
                         message
-                        <textarea id="add/MessageTextarea" className="border rounded p-2" placeholder="write your message" {...register('message')} />
+                        <textarea
+                            id="add/MessageTextarea"
+                            className="border rounded p-2"
+                            placeholder="write your message"
+                            {...register('message', { required: 'message is required' })}
+                        />
                     </label>
                 </div>
+                {errorMessage && <ErrorAlert message={errorMessage} />}
             </form>
         </div>
     )

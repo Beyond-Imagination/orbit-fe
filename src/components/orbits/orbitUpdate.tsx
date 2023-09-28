@@ -1,10 +1,12 @@
 import { Dispatch, SetStateAction } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { isValidCron } from 'cron-validator'
 
 import { AccessToken, IOrbit, IPutOrbitRequest } from '@/types'
 import { Check, Stop } from '@/icon'
 import { putOrbit } from '@/api/orbit'
+import ErrorAlert from '@/components/alerts/error'
 
 interface OrbitUpdateProps {
     orbit: IOrbit
@@ -31,7 +33,12 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
             setUpdating(false)
         },
     })
-    const { register, watch, handleSubmit } = useForm<Inputs>({
+    const {
+        register,
+        watch,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<Inputs>({
         defaultValues: {
             channelName: orbit.channelName,
             format: orbit.format,
@@ -41,6 +48,7 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
         },
     })
     const timezoneList = Intl.supportedValuesOf('timeZone')
+    const errorMessage: string | undefined = errors?.channelName?.message || errors?.cron?.message || errors?.message?.message
 
     const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
         const request: IPutOrbitRequest = {
@@ -74,7 +82,7 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
                                     id={`${orbit._id}/ChannelNameInput`}
                                     className="border rounded w-full p-1"
                                     value={watch('channelName')}
-                                    {...register('channelName')}
+                                    {...register('channelName', { required: 'channel name is required' })}
                                 />
                             </label>
                         </div>
@@ -85,7 +93,7 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
                                     id={`${orbit._id}/FormatSelect`}
                                     className="border rounded w-full p-1"
                                     defaultValue={watch('format')}
-                                    {...register('format')}
+                                    {...register('format', { required: 'format is required' })}
                                 >
                                     <option>cron</option>
                                 </select>
@@ -98,7 +106,7 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
                                     id={`${orbit._id}/TimezoneSelect`}
                                     className="border rounded w-full p-1"
                                     defaultValue={watch('timezone')}
-                                    {...register('timezone')}
+                                    {...register('timezone', { required: 'timezone is required' })}
                                 >
                                     {timezoneList.map(value => (
                                         <option key={`${orbit._id}/${value}`}>{value}</option>
@@ -113,7 +121,7 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
                                     id={`${orbit._id}/CronInput`}
                                     className="border rounded w-full p-1"
                                     value={watch('cron')}
-                                    {...register('cron')}
+                                    {...register('cron', { validate: value => isValidCron(value, { alias: true }) || 'invalid cron format' })}
                                 />
                             </label>
                         </div>
@@ -136,10 +144,11 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
                             id={`${orbit._id}/MessageTextarea`}
                             className="border rounded p-2"
                             value={watch('message')}
-                            {...register('message')}
+                            {...register('message', { required: 'message is required' })}
                         />
                     </label>
                 </div>
+                {errorMessage && <ErrorAlert message={errorMessage} />}
             </form>
         </div>
     )
