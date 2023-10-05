@@ -43,7 +43,7 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
     const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
         const request: IPostOrbitRequest = {
             body: {
-                channel: data.channelName,
+                channelName: data.channelName,
                 format: data.format,
                 timezone: data.timezone,
                 cron: data.cron,

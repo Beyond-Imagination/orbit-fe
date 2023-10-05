@@ -14,7 +14,7 @@ export interface IGetOrbitResponse {
 export interface IPostOrbitRequest {
     body: {
         format: string
-        channel: string
+        channelName: string
         timezone: string
         cron: string
         message: string
@@ -28,7 +28,7 @@ export interface IPostOrbitRequest {
 export interface IPutOrbitRequest {
     body: {
         format: string
-        channel: string
+        channelName: string
         timezone: string
         cron: string
         message: string

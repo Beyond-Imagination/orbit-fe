@@ -53,7 +53,7 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
     const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
         const request: IPutOrbitRequest = {
             body: {
-                channel: data.channelName,
+                channelName: data.channelName,
                 format: data.format,
                 timezone: data.timezone,
                 cron: data.cron,
