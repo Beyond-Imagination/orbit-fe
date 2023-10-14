@@ -44,6 +44,7 @@ export async function deleteOrbit(request: IDeleteOrbitRequest): Promise<void> {
     const res = await fetch(`${SERVER_URL}/v1/orbits/${request.uri.id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${request.secret.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(request.body),
     })
     if (!res.ok) {
         throw new Error('network response was not ok')

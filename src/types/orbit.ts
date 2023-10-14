@@ -43,6 +43,9 @@ export interface IPutOrbitRequest {
 }
 
 export interface IDeleteOrbitRequest {
+    body: {
+        serverUrl: string
+    }
     uri: {
         id: string
     }

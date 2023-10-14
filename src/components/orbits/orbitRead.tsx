@@ -63,7 +63,13 @@ export default function OrbitRead({ orbit, setUpdating, accessToken }: OrbitRead
                         </button>
                         <button
                             type="button"
-                            onClick={() => mutation.mutate({ uri: { id: orbit._id }, secret: { token: accessToken.token } })}
+                            onClick={() =>
+                                mutation.mutate({
+                                    body: { serverUrl: accessToken.serverUrl },
+                                    uri: { id: orbit._id },
+                                    secret: { token: accessToken.token },
+                                })
+                            }
                             className="w-6 h-6"
                         >
                             <Trash />
