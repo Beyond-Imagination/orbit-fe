@@ -28,8 +28,8 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
         mutationFn: (body: IPutOrbitRequest) => {
             return putOrbit(body)
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['orbits'] })
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['orbits'] })
             setUpdating(false)
         },
     })

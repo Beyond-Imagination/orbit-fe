@@ -22,15 +22,6 @@ type Inputs = {
 }
 
 export default function OrbitAdd({ accessToken }: OrbitAddProps) {
-    const queryClient = useQueryClient()
-    const mutation = useMutation({
-        mutationFn: (body: IPostOrbitRequest) => {
-            return postOrbit(body)
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['orbits'] })
-        },
-    })
     const {
         register,
         handleSubmit,
@@ -39,6 +30,17 @@ export default function OrbitAdd({ accessToken }: OrbitAddProps) {
     const [adding, setAdding] = useState<boolean>(false)
     const timezoneList = Intl.supportedValuesOf('timeZone')
     const errorMessage: string | undefined = errors?.channelName?.message || errors?.cron?.message || errors?.message?.message
+
+    const queryClient = useQueryClient()
+    const mutation = useMutation({
+        mutationFn: (body: IPostOrbitRequest) => {
+            return postOrbit(body)
+        },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['orbits'] })
+            setAdding(false)
+        },
+    })
 
     const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
         const request: IPostOrbitRequest = {

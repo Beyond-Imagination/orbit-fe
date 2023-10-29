@@ -17,8 +17,8 @@ export default function OrbitRead({ orbit, setUpdating, accessToken }: OrbitRead
         mutationFn: (request: IDeleteOrbitRequest) => {
             return deleteOrbit(request)
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['orbits'] })
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['orbits'] })
         },
     })
 
