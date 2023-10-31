@@ -1,17 +1,18 @@
 import { Dispatch, SetStateAction } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 
-import { AccessToken, IDeleteOrbitRequest, IOrbit } from '@/types'
+import { IDeleteOrbitRequest, IOrbit } from '@/types'
 import { deleteOrbit, sendOrbit } from '@/api/orbit'
 import { Edit, PaperAirplane, Trash } from '@/icon'
+import { useCredential } from '@/hooks'
 
 interface OrbitReadProps {
     orbit: IOrbit
     setUpdating: Dispatch<SetStateAction<boolean>>
-    accessToken: AccessToken
 }
 
-export default function OrbitRead({ orbit, setUpdating, accessToken }: OrbitReadProps) {
+export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
+    const credential = useCredential()
     const queryClient = useQueryClient()
     const mutation = useMutation({
         mutationFn: (request: IDeleteOrbitRequest) => {
@@ -49,9 +50,9 @@ export default function OrbitRead({ orbit, setUpdating, accessToken }: OrbitRead
                             type="button"
                             onClick={() =>
                                 sendOrbit({
-                                    body: { serverUrl: accessToken.serverUrl },
+                                    body: { serverUrl: credential.serverUrl },
                                     uri: { id: orbit._id },
-                                    secret: { token: accessToken.token },
+                                    secret: { token: credential.token },
                                 })
                             }
                             className="w-6 h-6"
@@ -65,9 +66,9 @@ export default function OrbitRead({ orbit, setUpdating, accessToken }: OrbitRead
                             type="button"
                             onClick={() =>
                                 mutation.mutate({
-                                    body: { serverUrl: accessToken.serverUrl },
+                                    body: { serverUrl: credential.serverUrl },
                                     uri: { id: orbit._id },
-                                    secret: { token: accessToken.token },
+                                    secret: { token: credential.token },
                                 })
                             }
                             className="w-6 h-6"

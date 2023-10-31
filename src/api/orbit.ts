@@ -1,9 +1,9 @@
 import { QueryFunctionContext } from 'react-query'
 
 import { SERVER_URL } from '@/config'
-import { AccessToken, IDeleteOrbitRequest, IGetOrbitResponse, IPostOrbitRequest, IPutOrbitRequest, ISendOrbitRequest } from '@/types'
+import { ICredential, IDeleteOrbitRequest, IGetOrbitResponse, IPostOrbitRequest, IPutOrbitRequest, ISendOrbitRequest } from '@/types'
 
-export async function getOrbits({ queryKey }: QueryFunctionContext<[string, AccessToken]>): Promise<IGetOrbitResponse> {
+export async function getOrbits({ queryKey }: QueryFunctionContext<[string, ICredential]>): Promise<IGetOrbitResponse> {
     const [, { token, serverUrl }] = queryKey
     const query = new URLSearchParams({ serverUrl })
     const res = await fetch(`${SERVER_URL}/v1/orbits?${query}`, {

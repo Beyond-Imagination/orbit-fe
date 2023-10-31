@@ -3,15 +3,15 @@ import { useMutation, useQueryClient } from 'react-query'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { isValidCron } from 'cron-validator'
 
-import { AccessToken, IOrbit, IPutOrbitRequest } from '@/types'
+import { IOrbit, IPutOrbitRequest } from '@/types'
 import { Check, Stop } from '@/icon'
 import { putOrbit } from '@/api/orbit'
 import ErrorAlert from '@/components/alerts/error'
+import { useCredential } from '@/hooks'
 
 interface OrbitUpdateProps {
     orbit: IOrbit
     setUpdating: Dispatch<SetStateAction<boolean>>
-    accessToken: AccessToken
 }
 
 type Inputs = {
@@ -22,7 +22,8 @@ type Inputs = {
     message: string
 }
 
-export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUpdateProps) {
+export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
+    const credential = useCredential()
     const queryClient = useQueryClient()
     const mutation = useMutation({
         mutationFn: (body: IPutOrbitRequest) => {
@@ -58,13 +59,13 @@ export default function OrbitUpdate({ orbit, setUpdating, accessToken }: OrbitUp
                 timezone: data.timezone,
                 cron: data.cron,
                 message: data.message,
-                serverUrl: accessToken.serverUrl,
+                serverUrl: credential.serverUrl,
             },
             uri: {
                 id: orbit._id,
             },
             secret: {
-                token: accessToken.token,
+                token: credential.token,
             },
         }
         mutation.mutate(request)

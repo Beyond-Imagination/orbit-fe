@@ -1,6 +1,6 @@
-import { AccessToken } from '@/types'
+import { ICredential } from '@/types'
 
-export default function getUserAccessToken(): Promise<AccessToken> {
+export default function getCredential(): Promise<ICredential> {
     return new Promise(resolve => {
         const channel = new MessageChannel()
         channel.port1.onmessage = e => resolve(e.data)
