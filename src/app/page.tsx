@@ -1,15 +1,16 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { QueryClient, QueryClientProvider } from 'react-query'
 
 import { AccessToken } from '@/types'
+import { useOrbits } from '@/hooks'
 import OrbitList from '@/components/orbits/orbitList'
 import getUserAccessToken from '@/services/space/auth'
 
 export default function Home() {
     const [accessToken, setAccessToken] = useState<AccessToken | null>(null)
-    const queryClient = new QueryClient()
+
+    const orbits = useOrbits(accessToken as AccessToken)
 
     useEffect(() => {
         getUserAccessToken().then(data => {
@@ -18,12 +19,10 @@ export default function Home() {
     }, [])
 
     return (
-        <QueryClientProvider client={queryClient}>
-            <main className="flex flex-col items-center justify-between p-4">
-                {
-                    accessToken ? <OrbitList accessToken={accessToken} /> : <div>loading</div> // TODO: error 처리
-                }
-            </main>
-        </QueryClientProvider>
+        <main className="w-full">
+            {
+                accessToken ? <OrbitList orbits={orbits} accessToken={accessToken} /> : <div>loading</div> // TODO: access token hook 추가 후 loading 제거
+            }
+        </main>
     )
 }

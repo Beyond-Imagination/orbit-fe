@@ -2,18 +2,30 @@
 
 import './globals.css'
 import { Inter } from 'next/font/google'
+import React from 'react'
 
 import Header from '@/components/header'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+    const queryClient = new QueryClient({
+        defaultOptions: {
+            queries: {
+                suspense: true,
+            },
+        },
+    })
+
     return (
         <html lang="en">
-            <body className={inter.className}>
-                <Header />
-                {children}
-            </body>
+            <QueryClientProvider client={queryClient}>
+                <body className={inter.className}>
+                    <Header />
+                    <div className="flex items-center justify-center p-4">{children}</div>
+                </body>
+            </QueryClientProvider>
         </html>
     )
 }
