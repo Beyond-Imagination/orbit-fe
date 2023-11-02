@@ -13,5 +13,5 @@ export function useOrbits(): IOrbit[] {
         suspense: true,
     })
 
-    return data?.orbits as IOrbit[]
+    return data?.orbits || ([] as IOrbit[])
 }
