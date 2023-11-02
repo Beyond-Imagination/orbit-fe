@@ -15,6 +15,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             queries: {
                 suspense: true,
             },
+            mutations: {
+                useErrorBoundary: true,
+                retry: 1,
+            },
         },
     })
 
