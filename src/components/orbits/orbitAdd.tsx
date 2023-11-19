@@ -24,6 +24,7 @@ export default function OrbitAdd() {
         register,
         handleSubmit,
         formState: { errors },
+        reset,
     } = useForm<Inputs>()
     const [adding, setAdding] = useState<boolean>(false)
     const timezoneList = Intl.supportedValuesOf('timeZone')
@@ -36,6 +37,7 @@ export default function OrbitAdd() {
         },
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['orbits'] })
+            reset()
             setAdding(false)
         },
     })
