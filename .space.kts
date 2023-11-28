@@ -17,6 +17,12 @@ job("Build and deploy") {
                     cat .env.development > .env.production
                 fi
 
+                if [ ${'$'}JB_SPACE_GIT_BRANCH == "refs/heads/main" ]; then
+                    echo "NEXT_PUBLIC_NEWRELIC_AGENT_ID={{ project:NEXT_PUBLIC_NEWRELIC_AGENT_ID_PROD }}" >> .env.production
+                else
+                    echo "NEXT_PUBLIC_NEWRELIC_AGENT_ID={{ project:NEXT_PUBLIC_NEWRELIC_AGENT_ID_DEV }}" >> .env.production
+                fi
+
                 yarn
                 yarn build
                 cp -r out ${'$'}JB_SPACE_FILE_SHARE_PATH/out

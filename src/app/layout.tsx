@@ -6,6 +6,7 @@ import React from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
 import Header from '@/components/header'
+import Newrelic from '@/components/newrelic'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
     return (
         <html lang="en">
+            <Newrelic />
             <QueryClientProvider client={queryClient}>
                 <body className={inter.className}>
                     <Header />
