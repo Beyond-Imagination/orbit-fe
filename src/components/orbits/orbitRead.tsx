@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 
-import { IDeleteOrbitRequest, IOrbit } from '@/types'
+import { IDeleteOrbitRequest, IOrbit, ISendOrbitRequest } from '@/types'
 import { deleteOrbit, sendOrbit } from '@/api/orbit'
 import { Edit, PaperAirplane, Trash } from '@/icon'
 import { useCredential } from '@/hooks'
@@ -14,12 +14,17 @@ interface OrbitReadProps {
 export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
     const credential = useCredential()
     const queryClient = useQueryClient()
-    const mutation = useMutation({
+    const deleteMutation = useMutation({
         mutationFn: (request: IDeleteOrbitRequest) => {
             return deleteOrbit(request)
         },
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['orbits'] })
+        },
+    })
+    const sendMessageMutation = useMutation({
+        mutationFn: (request: ISendOrbitRequest) => {
+            return sendOrbit(request)
         },
     })
 
@@ -49,7 +54,7 @@ export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
                         <button
                             type="button"
                             onClick={() =>
-                                sendOrbit({
+                                sendMessageMutation.mutate({
                                     body: { serverUrl: credential.serverUrl },
                                     uri: { id: orbit._id },
                                     secret: { token: credential.token },
@@ -65,7 +70,7 @@ export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
                         <button
                             type="button"
                             onClick={() =>
-                                mutation.mutate({
+                                deleteMutation.mutate({
                                     body: { serverUrl: credential.serverUrl },
                                     uri: { id: orbit._id },
                                     secret: { token: credential.token },
