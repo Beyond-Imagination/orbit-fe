@@ -10,8 +10,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
 
     return (
         <div className="text-center">
-            <h2>Something went wrong!</h2>
-
+            <h2>{error.message || 'Something went wrong!'}</h2>
             <button
                 type="button"
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -20,7 +19,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
                     () => reset()
                 }
             >
-                Try again
+                home
             </button>
         </div>
     )
