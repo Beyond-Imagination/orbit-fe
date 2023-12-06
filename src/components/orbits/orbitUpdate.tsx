@@ -8,6 +8,7 @@ import { Check, Stop } from '@/icon'
 import { putOrbit } from '@/api/orbit'
 import ErrorAlert from '@/components/alerts/error'
 import { useCredential } from '@/hooks'
+import Loading from '@/app/loading'
 
 interface OrbitUpdateProps {
     orbit: IOrbit
@@ -73,6 +74,7 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
 
     return (
         <div className="flex flex-col gap-2">
+            {mutation.isLoading && <Loading />}
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex justify-between">
                     <div className="basis-10/12 flex gap-6">

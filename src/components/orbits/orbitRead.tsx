@@ -5,6 +5,7 @@ import { IDeleteOrbitRequest, IOrbit, ISendOrbitRequest } from '@/types'
 import { deleteOrbit, sendOrbit } from '@/api/orbit'
 import { Edit, PaperAirplane, Trash } from '@/icon'
 import { useCredential } from '@/hooks'
+import Loading from '@/app/loading'
 
 interface OrbitReadProps {
     orbit: IOrbit
@@ -30,6 +31,7 @@ export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
 
     return (
         <div className="flex flex-col gap-2">
+            {(deleteMutation.isLoading || sendMessageMutation.isLoading) && <Loading />}
             <div className="flex justify-between">
                 <div className="basis-10/12 flex gap-6">
                     <div className="w-44">

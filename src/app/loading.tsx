@@ -1,4 +1,9 @@
+import { MoonLoader } from 'react-spinners'
+
 export default function Loading() {
-    // 추후 loading ui 수정
-    return <div className="text-center">loading</div>
+    return (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-1">
+            <MoonLoader />
+        </div>
+    )
 }

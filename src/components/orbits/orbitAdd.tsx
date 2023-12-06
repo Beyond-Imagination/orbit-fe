@@ -9,6 +9,7 @@ import { Check, Stop } from '@/icon'
 import AddButton from '@/components/orbits/addButton'
 import ErrorAlert from '@/components/alerts/error'
 import { useCredential } from '@/hooks'
+import Loading from '@/app/loading'
 
 type Inputs = {
     channelName: string
@@ -36,9 +37,9 @@ export default function OrbitAdd() {
             return postOrbit(body)
         },
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ['orbits'] })
             reset()
             setAdding(false)
+            await queryClient.invalidateQueries({ queryKey: ['orbits'] })
         },
     })
 
@@ -65,6 +66,7 @@ export default function OrbitAdd() {
 
     return (
         <div className=" border-2 border-[#9C4A98] rounded p-2 w-full">
+            {mutation.isLoading && <Loading />}
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex justify-between">
                     <div className="basis-10/12 flex gap-6">
