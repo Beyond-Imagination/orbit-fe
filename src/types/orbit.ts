@@ -5,6 +5,7 @@ export interface IOrbit {
     timezone: string
     cron: string
     message: string
+    status: string
 }
 
 export interface IGetOrbitResponse {

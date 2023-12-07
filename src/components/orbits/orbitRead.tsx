@@ -3,13 +3,24 @@ import { useMutation, useQueryClient } from 'react-query'
 
 import { IDeleteOrbitRequest, IOrbit, ISendOrbitRequest } from '@/types'
 import { deleteOrbit, sendOrbit } from '@/api/orbit'
-import { Edit, PaperAirplane, Trash } from '@/icon'
+import { Edit, PaperAirplane, Trash, Scheduled, Success, Fail } from '@/icon'
 import { useCredential } from '@/hooks'
 import Loading from '@/app/loading'
 
 interface OrbitReadProps {
     orbit: IOrbit
     setUpdating: Dispatch<SetStateAction<boolean>>
+}
+
+function OrbitStatus({ orbit }: { orbit: IOrbit }) {
+    switch (orbit.status) {
+        case 'success':
+            return <Success />
+        case 'fail':
+            return <Fail />
+        default:
+            return <Scheduled />
+    }
 }
 
 export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
@@ -51,6 +62,7 @@ export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
                         <div className="border rounded text-center p-1">{orbit.cron}</div>
                     </div>
                 </div>
+                <OrbitStatus orbit={orbit} />
                 <div className="basis-2/12">
                     <div className="flex gap-2 justify-end">
                         <button
