@@ -1,4 +1,27 @@
-job("Build and deploy") {
+job("[FE] Merge Request") {
+    startOn {
+        codeReviewOpened {
+            branchToCheckout = CodeReviewBranch.MERGE_REQUEST_SOURCE
+        }
+        gitPush {
+            anyRefMatching {
+                +"refs/merge/*/head"
+            }
+        }
+    }
+
+    container(displayName = "build & test", image = "node:alpine") {
+        shellScript {
+            content = """
+                set -e
+                yarn install
+                yarn build
+            """
+        }
+    }
+}
+
+job("[FE] Deploy") {
     startOn {
         gitPush {
             anyBranchMatching {
