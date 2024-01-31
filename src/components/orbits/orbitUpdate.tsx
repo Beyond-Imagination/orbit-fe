@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { isValidCron } from 'cron-validator'
@@ -9,6 +9,7 @@ import { putOrbit } from '@/api/orbit'
 import ErrorAlert from '@/components/alerts/error'
 import { useCredential } from '@/hooks'
 import Loading from '@/app/loading'
+import Tooltip from './tooltip'
 
 interface OrbitUpdateProps {
     orbit: IOrbit
@@ -72,6 +73,9 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
         mutation.mutate(request)
     }
 
+    const [showTooltipStop, setShowTooltipStop] = useState(false)
+    const [showTooltipCheck, setShowTooltipCheck] = useState(false)
+
     return (
         <div className="flex flex-col gap-2">
             {mutation.isLoading && <Loading />}
@@ -131,26 +135,41 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
                     </div>
                     <div className="basis-2/12">
                         <div className="flex gap-2 justify-end">
-                            <button type="button" onClick={() => setUpdating(false)} className="w-6 h-6">
-                                <Stop />
-                            </button>
-                            <button type="submit" className="w-6 h-6">
-                                <Check />
-                            </button>
+                            <div className="relative">
+                                <button
+                                    type="button"
+                                    onClick={() => setUpdating(false)}
+                                    onMouseEnter={() => setShowTooltipStop(true)}
+                                    onMouseLeave={() => setShowTooltipStop(false)}
+                                    className="w-6 h-6"
+                                >
+                                    <Stop />
+                                </button>
+                                <Tooltip message="Cancel edit" show={showTooltipStop} />
+                            </div>
+                            <div className="relative">
+                                <button
+                                    type="submit"
+                                    onMouseEnter={() => setShowTooltipCheck(true)}
+                                    onMouseLeave={() => setShowTooltipCheck(false)}
+                                    className="w-6 h-6"
+                                >
+                                    <Check />
+                                </button>
+                                <Tooltip message="Save edit" show={showTooltipCheck} />
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div>
-                    <label htmlFor={`${orbit._id}/MessageTextarea`} className="flex flex-col text-lg font-semibold">
-                        message
-                        <textarea
-                            id={`${orbit._id}/MessageTextarea`}
-                            className="border rounded p-2"
-                            value={watch('message')}
-                            {...register('message', { required: 'message is required' })}
-                        />
-                    </label>
-                </div>
+                <label htmlFor={`${orbit._id}/MessageTextarea`} className="flex flex-col text-lg font-semibold">
+                    message
+                    <textarea
+                        id={`${orbit._id}/MessageTextarea`}
+                        className="border rounded p-2"
+                        value={watch('message')}
+                        {...register('message', { required: 'message is required' })}
+                    />
+                </label>
                 {errorMessage && <ErrorAlert message={errorMessage} />}
             </form>
         </div>
