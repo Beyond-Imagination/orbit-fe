@@ -10,6 +10,7 @@ import AddButton from '@/components/orbits/addButton'
 import ErrorAlert from '@/components/alerts/error'
 import { useCredential } from '@/hooks'
 import Loading from '@/app/loading'
+import Tooltip from './tooltip'
 
 type Inputs = {
     channelName: string
@@ -59,6 +60,9 @@ export default function OrbitAdd() {
         }
         mutation.mutate(request)
     }
+
+    const [showTooltipStop, setShowTooltipStop] = useState(false)
+    const [showTooltipCheck, setShowTooltipCheck] = useState(false)
 
     if (!adding) {
         return <AddButton setAdding={setAdding} />
@@ -121,12 +125,29 @@ export default function OrbitAdd() {
                     </div>
                     <div className="basis-2/12">
                         <div className="flex gap-2 justify-end">
-                            <button type="button" onClick={() => setAdding(false)} className="w-6 h-6">
-                                <Stop />
-                            </button>
-                            <button type="submit" className="w-6 h-6">
-                                <Check />
-                            </button>
+                            <div className="relative">
+                                <button
+                                    type="button"
+                                    onClick={() => setAdding(false)}
+                                    onMouseEnter={() => setShowTooltipStop(true)}
+                                    onMouseLeave={() => setShowTooltipStop(false)}
+                                    className="w-6 h-6"
+                                >
+                                    <Stop />
+                                </button>
+                                <Tooltip message="Cancel add" show={showTooltipStop} />
+                            </div>
+                            <div className="relative">
+                                <button
+                                    type="submit"
+                                    onMouseEnter={() => setShowTooltipCheck(true)}
+                                    onMouseLeave={() => setShowTooltipCheck(false)}
+                                    className="w-6 h-6"
+                                >
+                                    <Check />
+                                </button>
+                                <Tooltip message="Add message" show={showTooltipCheck} />
+                            </div>
                         </div>
                     </div>
                 </div>
