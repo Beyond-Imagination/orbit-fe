@@ -1,4 +1,4 @@
-import React, { useState, Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 
 import { useMutation, useQueryClient } from 'react-query'
 
@@ -7,7 +7,8 @@ import { deleteOrbit, sendOrbit } from '@/api/orbit'
 import { Edit, PaperAirplane, Trash, Scheduled, Success, Fail } from '@/icon'
 import { useCredential } from '@/hooks'
 import Loading from '@/app/loading'
-import Tooltip from './tooltip'
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip'
 
 interface OrbitReadProps {
     orbit: IOrbit
@@ -42,10 +43,6 @@ export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
         },
     })
 
-    const [showSendTooltip, setShowSendTooltip] = useState(false)
-    const [showEditTooltip, setShowEditTooltip] = useState(false)
-    const [showDeleteTooltip, setShowDeleteTooltip] = useState(false)
-
     return (
         <div className="flex flex-col gap-2">
             {(deleteMutation.isLoading || sendMessageMutation.isLoading) && <Loading />}
@@ -72,8 +69,6 @@ export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
                 <div className="basis-2/12">
                     <div className="relative flex gap-2 justify-end">
                         <button
-                            onMouseEnter={() => setShowSendTooltip(true)}
-                            onMouseLeave={() => setShowSendTooltip(false)}
                             type="button"
                             onClick={() =>
                                 sendMessageMutation.mutate({
@@ -82,24 +77,24 @@ export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
                                     secret: { token: credential.token },
                                 })
                             }
+                            data-tooltip-id="Send"
+                            data-tooltip-content="Sending orbit message immediately"
                             className="w-6 h-6"
                         >
                             <PaperAirplane />
                         </button>
-                        <Tooltip message="Test send orbit" show={showSendTooltip} />
+                        <Tooltip id="Send" place="top" border="2px solid purple" />
                         <button
-                            onMouseEnter={() => setShowEditTooltip(true)}
-                            onMouseLeave={() => setShowEditTooltip(false)}
                             type="button"
                             onClick={() => setUpdating(true)}
+                            data-tooltip-id="Edit"
+                            data-tooltip-content="Edit orbit message"
                             className="w-6 h-6"
                         >
                             <Edit />
                         </button>
-                        <Tooltip message="Edit orbit" show={showEditTooltip} />
+                        <Tooltip id="Edit" place="top" border="2px solid purple" />
                         <button
-                            onMouseEnter={() => setShowDeleteTooltip(true)}
-                            onMouseLeave={() => setShowDeleteTooltip(false)}
                             type="button"
                             onClick={() =>
                                 deleteMutation.mutate({
@@ -108,11 +103,13 @@ export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
                                     secret: { token: credential.token },
                                 })
                             }
+                            data-tooltip-id="Delete"
+                            data-tooltip-content="Delete orbit message"
                             className="w-6 h-6"
                         >
                             <Trash />
                         </button>
-                        <Tooltip message="Delete orbit" show={showDeleteTooltip} />
+                        <Tooltip id="Delete" place="top" border="2px solid purple" />
                     </div>
                 </div>
             </div>

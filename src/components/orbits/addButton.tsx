@@ -1,28 +1,27 @@
 import { Plus } from '@/icon'
-import { Dispatch, SetStateAction, useState } from 'react'
-import Tooltip from './tooltip'
+import { Dispatch, SetStateAction } from 'react'
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip'
 
 interface AddButtonProps {
     setAdding: Dispatch<SetStateAction<boolean>>
 }
 
 export default function AddButton({ setAdding }: AddButtonProps) {
-    const [showTooltip, setShowTooltip] = useState(false)
-
     return (
         <div className="relative group">
             <button
                 type="button"
                 onClick={() => setAdding(true)}
-                onMouseEnter={() => setShowTooltip(true)}
-                onMouseLeave={() => setShowTooltip(false)}
+                data-tooltip-id="Plus"
+                data-tooltip-content="Add new orbit message"
                 className="w-full h-32 border-2 rounded-lg flex items-center justify-center"
             >
                 <div className="w-16 h-16">
                     <Plus />
                 </div>
             </button>
-            <Tooltip message="Add new orbit message" show={showTooltip} />
+            <Tooltip id="Plus" place="top" border="3px solid purple" />
         </div>
     )
 }

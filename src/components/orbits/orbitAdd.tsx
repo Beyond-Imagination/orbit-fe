@@ -10,7 +10,8 @@ import AddButton from '@/components/orbits/addButton'
 import ErrorAlert from '@/components/alerts/error'
 import { useCredential } from '@/hooks'
 import Loading from '@/app/loading'
-import Tooltip from './tooltip'
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip'
 
 type Inputs = {
     channelName: string
@@ -60,9 +61,6 @@ export default function OrbitAdd() {
         }
         mutation.mutate(request)
     }
-
-    const [showTooltipStop, setShowTooltipStop] = useState(false)
-    const [showTooltipCheck, setShowTooltipCheck] = useState(false)
 
     if (!adding) {
         return <AddButton setAdding={setAdding} />
@@ -129,24 +127,19 @@ export default function OrbitAdd() {
                                 <button
                                     type="button"
                                     onClick={() => setAdding(false)}
-                                    onMouseEnter={() => setShowTooltipStop(true)}
-                                    onMouseLeave={() => setShowTooltipStop(false)}
+                                    data-tooltip-id="Stop"
+                                    data-tooltip-content="Cancel add orbit message"
                                     className="w-6 h-6"
                                 >
                                     <Stop />
                                 </button>
-                                <Tooltip message="Cancel add" show={showTooltipStop} />
+                                <Tooltip id="Stop" place="top" border="2px solid purple" />
                             </div>
                             <div className="relative">
-                                <button
-                                    type="submit"
-                                    onMouseEnter={() => setShowTooltipCheck(true)}
-                                    onMouseLeave={() => setShowTooltipCheck(false)}
-                                    className="w-6 h-6"
-                                >
+                                <button type="submit" data-tooltip-id="Check" data-tooltip-content="Add orbit message" className="w-6 h-6">
                                     <Check />
                                 </button>
-                                <Tooltip message="Add message" show={showTooltipCheck} />
+                                <Tooltip id="Check" place="top" border="2px solid purple" />
                             </div>
                         </div>
                     </div>

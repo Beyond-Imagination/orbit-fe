@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { isValidCron } from 'cron-validator'
@@ -9,7 +9,8 @@ import { putOrbit } from '@/api/orbit'
 import ErrorAlert from '@/components/alerts/error'
 import { useCredential } from '@/hooks'
 import Loading from '@/app/loading'
-import Tooltip from './tooltip'
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip'
 
 interface OrbitUpdateProps {
     orbit: IOrbit
@@ -72,9 +73,6 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
         }
         mutation.mutate(request)
     }
-
-    const [showTooltipStop, setShowTooltipStop] = useState(false)
-    const [showTooltipCheck, setShowTooltipCheck] = useState(false)
 
     return (
         <div className="flex flex-col gap-2">
@@ -139,24 +137,19 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
                                 <button
                                     type="button"
                                     onClick={() => setUpdating(false)}
-                                    onMouseEnter={() => setShowTooltipStop(true)}
-                                    onMouseLeave={() => setShowTooltipStop(false)}
+                                    data-tooltip-id="Stop"
+                                    data-tooltip-content="Cancel updating orbit message"
                                     className="w-6 h-6"
                                 >
                                     <Stop />
                                 </button>
-                                <Tooltip message="Cancel edit" show={showTooltipStop} />
+                                <Tooltip id="Stop" place="top" border="2px solid purple" />
                             </div>
                             <div className="relative">
-                                <button
-                                    type="submit"
-                                    onMouseEnter={() => setShowTooltipCheck(true)}
-                                    onMouseLeave={() => setShowTooltipCheck(false)}
-                                    className="w-6 h-6"
-                                >
+                                <button type="submit" data-tooltip-id="Check" data-tooltip-content="Save updated orbit message" className="w-6 h-6">
                                     <Check />
                                 </button>
-                                <Tooltip message="Save edit" show={showTooltipCheck} />
+                                <Tooltip id="Check" place="top" border="2px solid purple" />
                             </div>
                         </div>
                     </div>
