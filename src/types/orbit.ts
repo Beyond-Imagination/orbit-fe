@@ -18,6 +18,10 @@ export interface IPostOrbitRequest {
         channelName: string
         timezone: string
         cron: string
+        weekly?: {
+            days: number[]
+            time: string
+        }
         message: string
         serverUrl: string
     }
