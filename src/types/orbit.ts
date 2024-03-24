@@ -3,9 +3,13 @@ export interface IOrbit {
     format: string
     channelName: string
     timezone: string
-    cron: string
+    cron?: string
     message: string
     status: string
+    weekly?: {
+        days: number[]
+        time: string
+    }
 }
 
 export interface IGetOrbitResponse {

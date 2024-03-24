@@ -9,10 +9,17 @@ import { useCredential } from '@/hooks'
 import Loading from '@/app/loading'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip'
+import OrbitCronOutput from '@/components/orbits/OrbitCronOutput'
+import OrbitWeeklyOutput from '@/components/orbits/OrbitWeeklyOutput'
 
 interface OrbitReadProps {
     orbit: IOrbit
     setUpdating: Dispatch<SetStateAction<boolean>>
+}
+
+type Weekly = {
+    days: number[]
+    time: string
 }
 
 function OrbitStatus({ orbit }: { orbit: IOrbit }) {
@@ -60,10 +67,8 @@ export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
                         <div className="text-lg font-semibold">timezone</div>
                         <div className="border rounded text-center p-1">{orbit.timezone}</div>
                     </div>
-                    <div className="w-44">
-                        <div className="text-lg font-semibold">cron</div>
-                        <div className="border rounded text-center p-1">{orbit.cron}</div>
-                    </div>
+
+                    {orbit.format === 'cron' && <OrbitCronOutput cron={orbit.cron as string} />}
                 </div>
                 <OrbitStatus orbit={orbit} />
                 <div className="basis-2/12">
@@ -113,6 +118,7 @@ export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
                     </div>
                 </div>
             </div>
+            {orbit.format === 'weekly' && <OrbitWeeklyOutput weekly={orbit.weekly as Weekly} />}
             <div>
                 <p className="text-lg font-semibold">message</p>
                 <pre className="border rounded p-2">{orbit.message}</pre>

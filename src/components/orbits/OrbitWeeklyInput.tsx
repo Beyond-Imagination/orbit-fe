@@ -48,7 +48,7 @@ function OrbitWeeklyInput() {
             <div className="ml-4 text-lg font-semibold">Date</div>
             <div className="w-fit mt-6" key="add/WeekInput">
                 {weeklyList.map(value => (
-                    <WeeklyDayButton key={value} day={value} isSelected={isSelected(value)} onClickHandler={handleButtonClick} />
+                    <WeeklyDayButton key={value} day={value} isSelected={isSelected(value)} isDisabled={false} onClickHandler={handleButtonClick} />
                 ))}
             </div>
         </div>
