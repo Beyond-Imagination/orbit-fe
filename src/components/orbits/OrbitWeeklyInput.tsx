@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useState } from 'react'
+import React, { MouseEventHandler, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import WeeklyDayButton from '@/components/orbits/weeklyDayButton'
 
@@ -26,9 +26,14 @@ function OrbitWeeklyInput() {
             time: string
         }
     }
-    const { register, setValue } = useFormContext<Inputs>()
+    const { register, setValue, watch } = useFormContext<Inputs>()
 
     const [selectedDays, setSelectedDays] = useState<string[]>([])
+
+    useEffect(() => {
+        const defaultWeekly = watch('weekly')
+        setSelectedDays(defaultWeekly.days.map(day => weeklyList[day]))
+    }, []) // 의존성 배열을 이용하여 최초 렌더링 시에만 실행되도록 설정
 
     const handleButtonClick: MouseEventHandler<HTMLButtonElement> = event => {
         const { value } = event.target as HTMLButtonElement

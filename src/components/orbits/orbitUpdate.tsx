@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { isValidCron } from 'cron-validator'
+import { SubmitHandler, useForm, FormProvider } from 'react-hook-form'
 
 import { IOrbit, IPutOrbitRequest } from '@/types'
 import { Check, Stop } from '@/icon'
@@ -11,6 +10,8 @@ import { useCredential } from '@/hooks'
 import Loading from '@/app/loading'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip'
+import OrbitCronInput from '@/components/orbits/OrbitCronInput'
+import OrbitWeeklyInput from '@/components/orbits/OrbitWeeklyInput'
 
 interface OrbitUpdateProps {
     orbit: IOrbit
@@ -22,6 +23,10 @@ type Inputs = {
     format: string
     timezone: string
     cron: string
+    weekly: {
+        days: number[]
+        time: string
+    }
     message: string
 }
 
@@ -37,20 +42,24 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
             setUpdating(false)
         },
     })
-    const {
-        register,
-        watch,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<Inputs>({
+
+    const methods = useForm<Inputs>({
         defaultValues: {
             channelName: orbit.channelName,
             format: orbit.format,
             timezone: orbit.timezone,
             cron: orbit.cron,
+            weekly: orbit.weekly,
             message: orbit.message,
         },
     })
+    const {
+        register,
+        watch,
+        handleSubmit,
+        formState: { errors },
+    } = methods
+
     const timezoneList = Intl.supportedValuesOf('timeZone')
     const errorMessage: string | undefined = errors?.channelName?.message || errors?.cron?.message || errors?.message?.message
 
@@ -61,6 +70,7 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
                 format: data.format,
                 timezone: data.timezone,
                 cron: data.cron,
+                weekly: data.weekly,
                 message: data.message,
                 serverUrl: credential.serverUrl,
             },
@@ -77,94 +87,95 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
     return (
         <div className="flex flex-col gap-2">
             {mutation.isLoading && <Loading />}
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="flex justify-between">
-                    <div className="basis-10/12 flex gap-6">
-                        <div className="w-44">
-                            <label htmlFor={`${orbit._id}/ChannelNameInput`} className="text-lg font-semibold">
-                                Channel Name
-                                <input
-                                    id={`${orbit._id}/ChannelNameInput`}
-                                    className="border rounded w-full p-1"
-                                    value={watch('channelName')}
-                                    {...register('channelName', { required: 'channel name is required' })}
-                                />
-                            </label>
-                        </div>
-                        <div className="w-32">
-                            <label htmlFor={`${orbit._id}/FormatSelect`} className="text-lg font-semibold">
-                                Format
-                                <select
-                                    id={`${orbit._id}/FormatSelect`}
-                                    className="border rounded w-full p-1"
-                                    defaultValue={watch('format')}
-                                    {...register('format', { required: 'format is required' })}
-                                >
-                                    <option>cron</option>
-                                </select>
-                            </label>
-                        </div>
-                        <div className="w-68">
-                            <label htmlFor={`${orbit._id}/TimezoneSelect`} className="text-lg font-semibold">
-                                timezone
-                                <select
-                                    id={`${orbit._id}/TimezoneSelect`}
-                                    className="border rounded w-full p-1"
-                                    defaultValue={watch('timezone')}
-                                    {...register('timezone', { required: 'timezone is required' })}
-                                >
-                                    {timezoneList.map(value => (
-                                        <option key={`${orbit._id}/${value}`}>{value}</option>
-                                    ))}
-                                </select>
-                            </label>
-                        </div>
-                        <div className="w-44">
-                            <label htmlFor={`${orbit._id}/CronInput`} className="text-lg font-semibold">
-                                cron
-                                <input
-                                    id={`${orbit._id}/CronInput`}
-                                    className="border rounded w-full p-1"
-                                    value={watch('cron')}
-                                    {...register('cron', { validate: value => isValidCron(value, { alias: true }) || 'invalid cron format' })}
-                                />
-                            </label>
-                        </div>
-                    </div>
-                    <div className="basis-2/12">
-                        <div className="flex gap-2 justify-end">
-                            <div className="relative">
-                                <button
-                                    type="button"
-                                    onClick={() => setUpdating(false)}
-                                    data-tooltip-id="Stop"
-                                    data-tooltip-content="Cancel updating orbit message"
-                                    className="w-6 h-6"
-                                >
-                                    <Stop />
-                                </button>
-                                <Tooltip id="Stop" place="top" border="2px solid purple" />
+            <FormProvider {...methods}>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className="flex justify-between">
+                        <div className="basis-10/12 flex gap-6">
+                            <div className="w-44">
+                                <label htmlFor={`${orbit._id}/ChannelNameInput`} className="text-lg font-semibold">
+                                    Channel Name
+                                    <input
+                                        id={`${orbit._id}/ChannelNameInput`}
+                                        className="border rounded w-full p-1"
+                                        value={watch('channelName')}
+                                        {...register('channelName', { required: 'channel name is required' })}
+                                    />
+                                </label>
                             </div>
-                            <div className="relative">
-                                <button type="submit" data-tooltip-id="Check" data-tooltip-content="Save updated orbit message" className="w-6 h-6">
-                                    <Check />
-                                </button>
-                                <Tooltip id="Check" place="top" border="2px solid purple" />
+                            <div className="w-32">
+                                <label htmlFor={`${orbit._id}/FormatSelect`} className="text-lg font-semibold">
+                                    Format
+                                    <select
+                                        id={`${orbit._id}/FormatSelect`}
+                                        className="border rounded w-full p-1"
+                                        defaultValue={watch('format')}
+                                        {...register('format', { required: 'format is required' })}
+                                    >
+                                        <option>cron</option>
+                                        <option>weekly</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <div className="w-68">
+                                <label htmlFor={`${orbit._id}/TimezoneSelect`} className="text-lg font-semibold">
+                                    timezone
+                                    <select
+                                        id={`${orbit._id}/TimezoneSelect`}
+                                        className="border rounded w-full p-1"
+                                        defaultValue={watch('timezone')}
+                                        {...register('timezone', { required: 'timezone is required' })}
+                                    >
+                                        {timezoneList.map(value => (
+                                            <option key={`${orbit._id}/${value}`}>{value}</option>
+                                        ))}
+                                    </select>
+                                </label>
+                            </div>
+                            {orbit.format === 'cron' && <OrbitCronInput />}
+                        </div>
+                        <div className="basis-2/12">
+                            <div className="flex gap-2 justify-end">
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        onClick={() => setUpdating(false)}
+                                        data-tooltip-id="Stop"
+                                        data-tooltip-content="Cancel updating orbit message"
+                                        className="w-6 h-6"
+                                    >
+                                        <Stop />
+                                    </button>
+                                    <Tooltip id="Stop" place="top" border="2px solid purple" />
+                                </div>
+                                <div className="relative">
+                                    <button
+                                        type="submit"
+                                        data-tooltip-id="Check"
+                                        data-tooltip-content="Save updated orbit message"
+                                        className="w-6 h-6"
+                                    >
+                                        <Check />
+                                    </button>
+                                    <Tooltip id="Check" place="top" border="2px solid purple" />
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <label htmlFor={`${orbit._id}/MessageTextarea`} className="flex flex-col text-lg font-semibold">
-                    message
-                    <textarea
-                        id={`${orbit._id}/MessageTextarea`}
-                        className="border rounded p-2"
-                        value={watch('message')}
-                        {...register('message', { required: 'message is required' })}
-                    />
-                </label>
-                {errorMessage && <ErrorAlert message={errorMessage} />}
-            </form>
+
+                    {orbit.format === 'weekly' && <OrbitWeeklyInput />}
+
+                    <label htmlFor={`${orbit._id}/MessageTextarea`} className="flex flex-col text-lg font-semibold">
+                        message
+                        <textarea
+                            id={`${orbit._id}/MessageTextarea`}
+                            className="border rounded p-2"
+                            value={watch('message')}
+                            {...register('message', { required: 'message is required' })}
+                        />
+                    </label>
+                    {errorMessage && <ErrorAlert message={errorMessage} />}
+                </form>
+            </FormProvider>
         </div>
     )
 }
