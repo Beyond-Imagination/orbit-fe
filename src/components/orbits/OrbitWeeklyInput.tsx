@@ -32,7 +32,7 @@ function OrbitWeeklyInput() {
 
     useEffect(() => {
         const defaultWeekly = watch('weekly')
-        setSelectedDays(defaultWeekly.days.map(day => weeklyList[day]))
+        setSelectedDays(defaultWeekly.days?.map(day => weeklyList[day]) ?? [])
     }, []) // 의존성 배열을 이용하여 최초 렌더링 시에만 실행되도록 설정
 
     const handleButtonClick: MouseEventHandler<HTMLButtonElement> = event => {
@@ -42,7 +42,7 @@ function OrbitWeeklyInput() {
         const daysList = updatedDays.map(day => dayMapper[day])
         setValue('weekly.days', daysList)
     }
-    const isSelected = (value: string) => selectedDays.includes(value)
+    const isSelected = (value: string) => selectedDays?.includes(value)
 
     return (
         <div className="w-fit flex items-start">
