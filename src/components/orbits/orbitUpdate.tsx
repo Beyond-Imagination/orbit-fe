@@ -63,13 +63,21 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
     const timezoneList = Intl.supportedValuesOf('timeZone')
     const errorMessage: string | undefined = errors?.channelName?.message || errors?.cron?.message || errors?.message?.message
 
+    const convertToCronExpression = (days: number[], time: string): string => {
+        const [hours, minutes] = time.split(':')
+
+        days.sort()
+        const daysCron = days.join(',')
+        return `${minutes} ${hours} * * ${daysCron}`
+    }
+
     const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
         const request: IPutOrbitRequest = {
             body: {
                 channelName: data.channelName,
                 format: data.format,
                 timezone: data.timezone,
-                cron: data.cron,
+                cron: data.format === 'cron' ? data.cron : convertToCronExpression(data.weekly.days, data.weekly.time),
                 weekly: data.weekly,
                 message: data.message,
                 serverUrl: credential.serverUrl,
