@@ -8,7 +8,8 @@
         "start": "next start",
         "lint": "next lint",
         "prepare": "husky install",
-        "json-server": "json-server --watch db.json --routes routes.json --port 5000"
+        "json-server": "json-server --watch db.json --routes routes.json --port 5000",
+        "reviewer": "node -r @swc-node/register src/scripts/reviewers.ts"
     },
     "dependencies": {
         "@types/node": "20.5.0",
@@ -30,6 +31,8 @@
         "typescript": "5.1.6"
     },
     "devDependencies": {
+        "@swc-node/register": "^1.9.0",
+        "@swc/core": "^1.4.16",
         "@typescript-eslint/eslint-plugin": "^6.4.0",
         "@typescript-eslint/parser": "^6.4.0",
         "eslint-config-airbnb": "^19.0.4",
