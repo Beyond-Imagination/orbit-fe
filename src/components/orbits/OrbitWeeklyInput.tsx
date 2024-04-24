@@ -19,7 +19,7 @@ const weeklyList = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 function OrbitWeeklyInput() {
     type Inputs = {
         channelName: string
-        format: string
+        type: string
         timezone: string
         weekly: {
             days: number[] // ex) SUN,MON,TUE => [0, 1, 2]

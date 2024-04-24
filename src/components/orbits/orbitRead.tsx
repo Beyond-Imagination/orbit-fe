@@ -60,15 +60,15 @@ export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
                         <div className="border rounded text-center p-1">{orbit.channelName}</div>
                     </div>
                     <div className="w-32">
-                        <p className="text-lg font-semibold">Format</p>
-                        <div className="border rounded text-center p-1 ">{orbit.format}</div>
+                        <p className="text-lg font-semibold">Type</p>
+                        <div className="border rounded text-center p-1 ">{orbit.type}</div>
                     </div>
                     <div className="w-58">
                         <div className="text-lg font-semibold">timezone</div>
                         <div className="border rounded text-center p-1">{orbit.timezone}</div>
                     </div>
 
-                    {orbit.format === 'cron' && <OrbitCronOutput cron={orbit.cron as string} />}
+                    {orbit.type === 'cron' && <OrbitCronOutput cron={orbit.cron as string} />}
                 </div>
                 <OrbitStatus orbit={orbit} />
                 <div className="basis-2/12">
@@ -118,7 +118,7 @@ export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
                     </div>
                 </div>
             </div>
-            {orbit.format === 'weekly' && <OrbitWeeklyOutput weekly={orbit.weekly as Weekly} />}
+            {orbit.type === 'weekly' && <OrbitWeeklyOutput weekly={orbit.weekly as Weekly} />}
             <div>
                 <p className="text-lg font-semibold">message</p>
                 <pre className="border rounded p-2">{orbit.message}</pre>

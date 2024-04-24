@@ -20,7 +20,7 @@ interface OrbitUpdateProps {
 
 type Inputs = {
     channelName: string
-    format: string
+    type: string
     timezone: string
     cron: string
     weekly: {
@@ -46,7 +46,7 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
     const methods = useForm<Inputs>({
         defaultValues: {
             channelName: orbit.channelName,
-            format: orbit.format,
+            type: orbit.type,
             timezone: orbit.timezone,
             cron: orbit.cron,
             weekly: orbit.weekly,
@@ -75,9 +75,9 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
         const request: IPutOrbitRequest = {
             body: {
                 channelName: data.channelName,
-                format: data.format,
+                type: data.type,
                 timezone: data.timezone,
-                cron: data.format === 'cron' ? data.cron : convertToCronExpression(data.weekly.days, data.weekly.time),
+                cron: data.type === 'cron' ? data.cron : convertToCronExpression(data.weekly.days, data.weekly.time),
                 weekly: data.weekly,
                 message: data.message,
                 serverUrl: credential.serverUrl,
@@ -111,13 +111,13 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
                                 </label>
                             </div>
                             <div className="w-32">
-                                <label htmlFor={`${orbit._id}/FormatSelect`} className="text-lg font-semibold">
-                                    Format
+                                <label htmlFor={`${orbit._id}/TypeSelect`} className="text-lg font-semibold">
+                                    Type
                                     <select
-                                        id={`${orbit._id}/FormatSelect`}
+                                        id={`${orbit._id}/TypeSelect`}
                                         className="border rounded w-full p-1"
-                                        defaultValue={watch('format')}
-                                        {...register('format', { required: 'format is required' })}
+                                        defaultValue={watch('type')}
+                                        {...register('type', { required: 'type is required' })}
                                     >
                                         <option>cron</option>
                                         <option>weekly</option>
@@ -139,7 +139,7 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
                                     </select>
                                 </label>
                             </div>
-                            {orbit.format === 'cron' && <OrbitCronInput />}
+                            {orbit.type === 'cron' && <OrbitCronInput />}
                         </div>
                         <div className="basis-2/12">
                             <div className="flex gap-2 justify-end">
@@ -170,7 +170,7 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
                         </div>
                     </div>
 
-                    {orbit.format === 'weekly' && <OrbitWeeklyInput />}
+                    {orbit.type === 'weekly' && <OrbitWeeklyInput />}
 
                     <label htmlFor={`${orbit._id}/MessageTextarea`} className="flex flex-col text-lg font-semibold">
                         message

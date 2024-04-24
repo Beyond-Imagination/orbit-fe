@@ -15,7 +15,7 @@ import { Tooltip } from 'react-tooltip'
 
 type Inputs = {
     channelName: string
-    format: string
+    type: string
     timezone: string
     cron: string
     message: string
@@ -35,9 +35,9 @@ export default function OrbitAdd() {
         reset,
     } = methods
     const [adding, setAdding] = useState<boolean>(false)
-    const [inputFormat, setInputFormat] = useState<string>('cron')
-    const onChangeFormat = (e: ChangeEvent<HTMLSelectElement>) => {
-        setInputFormat(e.target.value)
+    const [inputType, setInputType] = useState<string>('cron')
+    const onChangeType = (e: ChangeEvent<HTMLSelectElement>) => {
+        setInputType(e.target.value)
     }
 
     const timezoneList = Intl.supportedValuesOf('timeZone')
@@ -68,10 +68,10 @@ export default function OrbitAdd() {
         const request: IPostOrbitRequest = {
             body: {
                 channelName: data.channelName,
-                format: data.format,
+                type: data.type,
                 timezone: data.timezone,
-                cron: data.format === 'cron' ? data.cron : convertToCronExpression(data.weekly.days, data.weekly.time),
-                weekly: data.format === 'weekly' ? data.weekly : undefined,
+                cron: data.type === 'cron' ? data.cron : convertToCronExpression(data.weekly.days, data.weekly.time),
+                weekly: data.type === 'weekly' ? data.weekly : undefined,
                 message: data.message,
                 serverUrl: credential.serverUrl,
             },
@@ -105,13 +105,13 @@ export default function OrbitAdd() {
                                 </label>
                             </div>
                             <div className="w-32">
-                                <label htmlFor="add/FormatSelect" className="text-lg font-semibold">
-                                    Format
+                                <label htmlFor="add/TypeSelect" className="text-lg font-semibold">
+                                    Type
                                     <select
-                                        id="add/FormatSelect"
+                                        id="add/TypeSelect"
                                         className="border rounded w-full p-1"
-                                        {...register('format', { required: 'format is required' })}
-                                        onChange={onChangeFormat}
+                                        {...register('type', { required: 'type is required' })}
+                                        onChange={onChangeType}
                                     >
                                         <option>cron</option>
                                         <option>weekly</option>
@@ -133,7 +133,7 @@ export default function OrbitAdd() {
                                 </label>
                             </div>
 
-                            {inputFormat === 'cron' && <OrbitCronInput />}
+                            {inputType === 'cron' && <OrbitCronInput />}
                         </div>
                         <div className="basis-2/12">
                             <div className="flex gap-2 justify-end">
@@ -159,7 +159,7 @@ export default function OrbitAdd() {
                         </div>
                     </div>
 
-                    {inputFormat === 'weekly' && <OrbitWeeklyInput />}
+                    {inputType === 'weekly' && <OrbitWeeklyInput />}
 
                     <div>
                         <label htmlFor="add/MessageTextarea" className="flex flex-col text-lg font-semibold">

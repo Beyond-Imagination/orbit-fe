@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form'
 function OrbitCronInput() {
     type Inputs = {
         channelName: string
-        format: string
+        type: string
         timezone: string
         cron: string
     }
