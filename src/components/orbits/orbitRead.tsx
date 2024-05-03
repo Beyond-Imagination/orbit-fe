@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from 'react'
 
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { IDeleteOrbitRequest, IOrbit, ISendOrbitRequest } from '@/types'
 import { deleteOrbit, sendOrbit } from '@/api/orbit'
@@ -52,7 +52,7 @@ export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
 
     return (
         <div className="flex flex-col gap-2">
-            {(deleteMutation.isLoading || sendMessageMutation.isLoading) && <Loading />}
+            {(deleteMutation.isPending || sendMessageMutation.isPending) && <Loading />}
             <div className="flex justify-between">
                 <div className="basis-10/12 flex gap-6">
                     <div className="w-44">

@@ -1,14 +1,15 @@
 'use client'
 
-import OrbitList from '@/components/orbits/orbitList'
-import { useOrbits } from '@/hooks'
+import dynamic from 'next/dynamic'
+
+const OrbitList = dynamic(() => import('@/components/orbits/orbitList'), {
+    ssr: false,
+})
 
 export default function Home() {
-    const orbits = useOrbits()
-
     return (
         <main className="w-full">
-            <OrbitList orbits={orbits} />
+            <OrbitList />
         </main>
     )
 }

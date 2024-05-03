@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from 'react'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import OrbitCronInput from '@/components/orbits/OrbitCronInput'
 import { IPostOrbitRequest } from '@/types'
@@ -88,7 +88,7 @@ export default function OrbitAdd() {
 
     return (
         <div className=" border-2 border-[#9C4A98] rounded p-2 w-full">
-            {mutation.isLoading && <Loading />}
+            {mutation.isPending && <Loading />}
             <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex justify-between">

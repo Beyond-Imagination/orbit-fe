@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { SubmitHandler, useForm, FormProvider } from 'react-hook-form'
 
 import { IOrbit, IPutOrbitRequest } from '@/types'
@@ -94,7 +94,7 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
 
     return (
         <div className="flex flex-col gap-2">
-            {mutation.isLoading && <Loading />}
+            {mutation.isPending && <Loading />}
             <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex justify-between">

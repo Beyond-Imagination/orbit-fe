@@ -3,7 +3,7 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import React from 'react'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import Header from '@/components/header'
 import Newrelic from '@/components/newrelic'
@@ -14,11 +14,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     const queryClient = new QueryClient({
         defaultOptions: {
             queries: {
-                suspense: true,
+                staleTime: 1000 * 60 * 5, // 5 minutes
+                gcTime: 1000 * 60 * 5, // 5 minutes
             },
             mutations: {
-                useErrorBoundary: true,
                 retry: 1,
+                throwOnError: true,
             },
         },
     })

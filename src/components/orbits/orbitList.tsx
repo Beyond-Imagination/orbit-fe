@@ -1,12 +1,11 @@
+'use client'
+
 import Orbit from '@/components/orbits/orbit'
 import OrbitAdd from '@/components/orbits/orbitAdd'
-import { IOrbit } from '@/types'
+import { useOrbits } from '@/hooks'
 
-type Props = {
-    orbits: IOrbit[]
-}
-
-export default function OrbitList({ orbits }: Props) {
+export default function OrbitList() {
+    const orbits = useOrbits()
     return (
         <div className="flex flex-col space-y-2 w-full">
             {orbits.map(orbit => (
