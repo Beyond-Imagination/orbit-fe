@@ -70,7 +70,6 @@ job("[FE] Deploy") {
 
         shellScript {
             content = """
-
                 if [ ${'$'}JB_SPACE_GIT_BRANCH == "refs/heads/develop" ]; then
                     cat .env.development > .env.production
                 fi
