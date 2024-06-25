@@ -7,6 +7,7 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
+        "test": "jest",
         "prepare": "husky install",
         "json-server": "json-server --watch db.json --routes routes.json --port 5000",
         "reviewer": "node -r @swc-node/register src/scripts/reviewers.ts"
@@ -32,7 +33,10 @@
     },
     "devDependencies": {
         "@swc-node/register": "^1.9.0",
-        "@swc/core": "^1.4.16",
+        "@swc/core": "^1.5.7",
+        "@testing-library/jest-dom": "^6.4.6",
+        "@testing-library/react": "^16.0.0",
+        "@types/jest": "^29.5.12",
         "@typescript-eslint/eslint-plugin": "^6.4.0",
         "@typescript-eslint/parser": "^6.4.0",
         "eslint-config-airbnb": "^19.0.4",
@@ -44,7 +48,10 @@
         "eslint-plugin-react": "^7.33.2",
         "eslint-plugin-react-hooks": "^4.6.0",
         "husky": "^8.0.3",
+        "jest": "^29.7.0",
+        "jest-environment-jsdom": "^29.7.0",
         "json-server": "^0.17.3",
-        "prettier": "^3.0.2"
+        "prettier": "^3.0.2",
+        "ts-node": "^10.9.2"
     }
 }
