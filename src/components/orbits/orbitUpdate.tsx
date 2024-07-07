@@ -139,7 +139,7 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
                                     </select>
                                 </label>
                             </div>
-                            {orbit.type === 'cron' && <OrbitCronInput />}
+                            {watch('type') === 'cron' && <OrbitCronInput />}
                         </div>
                         <div className="basis-2/12">
                             <div className="flex gap-2 justify-end">
@@ -170,7 +170,7 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
                         </div>
                     </div>
 
-                    {orbit.type === 'weekly' && <OrbitWeeklyInput />}
+                    {watch('type') === 'weekly' && <OrbitWeeklyInput />}
 
                     <label htmlFor={`${orbit._id}/MessageTextarea`} className="flex flex-col text-lg font-semibold">
                         message
