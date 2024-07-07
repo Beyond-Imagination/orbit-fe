@@ -32,6 +32,7 @@
         "typescript": "5.1.6"
     },
     "devDependencies": {
+        "@faker-js/faker": "^8.4.1",
         "@swc-node/register": "^1.9.0",
         "@swc/core": "^1.5.7",
         "@testing-library/jest-dom": "^6.4.6",

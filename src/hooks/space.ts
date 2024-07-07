@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 
 import { ICredential } from '@/types'
-import getCredential from '@/services/space/auth'
+import { getCredential } from '@/services/space/auth'
 
 export function useCredential(): ICredential {
     const { data: credential } = useSuspenseQuery<ICredential | null>({
