@@ -11,9 +11,10 @@ jest.mock('@/services/space/auth', () => ({
     getCredential: jest.fn().mockImplementation((...args) => getCredentialMock(...args)),
 }))
 
+// test case 별로 query client 새로 생성하기 위해 component 를 return
 function TestWrapper() {
-    // test case 별로 query client 새로 생성하기 위해 component 를 return
     const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } })
+    // eslint-disable-next-line react/display-name
     return ({ children }: { children: React.ReactNode }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 }
 
