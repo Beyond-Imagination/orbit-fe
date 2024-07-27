@@ -12,6 +12,7 @@ export default function AddButton({ setAdding }: AddButtonProps) {
         <div className="relative group">
             <button
                 type="button"
+                data-testid={'AddButton'}
                 onClick={() => setAdding(true)}
                 data-tooltip-id="Plus"
                 data-tooltip-content="Add new orbit message"
@@ -21,7 +22,7 @@ export default function AddButton({ setAdding }: AddButtonProps) {
                     <Plus />
                 </div>
             </button>
-            <Tooltip id="Plus" place="top" border="3px solid purple" />
+            <Tooltip data-testid={'Tooltip'} id="Plus" place="top" border="3px solid purple" />
         </div>
     )
 }
