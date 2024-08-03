@@ -4,13 +4,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { IDeleteOrbitRequest, IOrbit, ISendOrbitRequest } from '@/types'
 import { deleteOrbit, sendOrbit } from '@/api/orbit'
-import { Edit, PaperAirplane, Trash, Scheduled, Success, Fail } from '@/icon'
+import { Edit, PaperAirplane, Trash } from '@/icon'
 import { useCredential } from '@/hooks'
 import Loading from '@/app/loading'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip'
 import OrbitCronOutput from '@/components/orbits/OrbitCronOutput'
 import OrbitWeeklyOutput from '@/components/orbits/OrbitWeeklyOutput'
+import OrbitStatus from '@/components/orbits/OrbitStatus'
 
 interface OrbitReadProps {
     orbit: IOrbit
@@ -20,17 +21,6 @@ interface OrbitReadProps {
 type Weekly = {
     days: number[]
     time: string
-}
-
-function OrbitStatus({ orbit }: { orbit: IOrbit }) {
-    switch (orbit.status) {
-        case 'success':
-            return <Success />
-        case 'fail':
-            return <Fail />
-        default:
-            return <Scheduled />
-    }
 }
 
 export default function OrbitRead({ orbit, setUpdating }: OrbitReadProps) {
