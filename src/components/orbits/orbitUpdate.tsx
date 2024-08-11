@@ -12,6 +12,7 @@ import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip'
 import OrbitCronInput from '@/components/orbits/OrbitCronInput'
 import OrbitWeeklyInput from '@/components/orbits/OrbitWeeklyInput'
+import { checkChannelNameExists } from '@/api/space'
 
 interface OrbitUpdateProps {
     orbit: IOrbit
@@ -106,7 +107,11 @@ export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
                                         id={`${orbit._id}/ChannelNameInput`}
                                         className="border rounded w-full p-1"
                                         value={watch('channelName')}
-                                        {...register('channelName', { required: 'channel name is required' })}
+                                        {...register('channelName', {
+                                            required: 'existing channel name is required',
+                                            validate: channelName =>
+                                                checkChannelNameExists({ channelName, serverUrl: credential.serverUrl, token: credential.token }),
+                                        })}
                                     />
                                 </label>
                             </div>

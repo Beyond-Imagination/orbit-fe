@@ -12,6 +12,7 @@ import { useCredential } from '@/hooks'
 import Loading from '@/app/loading'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip'
+import { checkChannelNameExists } from '@/api/space'
 
 type Inputs = {
     channelName: string
@@ -100,7 +101,11 @@ export default function OrbitAdd() {
                                         id="add/ChannelNameInput"
                                         className="border rounded w-full p-1"
                                         placeholder="your channel name"
-                                        {...register('channelName', { required: 'channel name is required' })}
+                                        {...register('channelName', {
+                                            required: 'existing channel name is required',
+                                            validate: channelName =>
+                                                checkChannelNameExists({ channelName, serverUrl: credential.serverUrl, token: credential.token }),
+                                        })}
                                     />
                                 </label>
                             </div>

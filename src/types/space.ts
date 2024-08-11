@@ -9,6 +9,12 @@ export interface Team {
     memberships: [Membership]
 }
 
+export interface ICheckChannelNameRequest {
+    serverUrl: string
+    token: string
+    channelName: string
+}
+
 interface Membership {
     member: Member
 }
