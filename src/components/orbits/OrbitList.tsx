@@ -1,7 +1,7 @@
 'use client'
 
-import Orbit from '@/components/orbits/orbit'
-import OrbitAdd from '@/components/orbits/orbitAdd'
+import Orbit from '@/components/orbits/Orbit'
+import OrbitAdd from '@/components/orbits/OrbitAdd'
 import { useOrbits } from '@/hooks'
 
 export default function OrbitList() {

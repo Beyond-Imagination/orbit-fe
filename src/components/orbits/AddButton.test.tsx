@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, screen, within } from '@testing-library/react'
 
-import AddButton from '@/components/orbits/addButton'
+import AddButton from '@/components/orbits/AddButton'
 
 describe('AddButton', () => {
     it('renders a AddButton', () => {

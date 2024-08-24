@@ -1,6 +1,6 @@
 import React, { MouseEventHandler, useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
-import WeeklyDayButton from '@/components/orbits/weeklyDayButton'
+import WeeklyDayButton from '@/components/orbits/WeeklyDayButton'
 
 const dayMapper: {
     [Key: string]: number

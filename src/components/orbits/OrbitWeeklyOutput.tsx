@@ -1,4 +1,4 @@
-import WeeklyDayButton from '@/components/orbits/weeklyDayButton'
+import WeeklyDayButton from '@/components/orbits/WeeklyDayButton'
 import React from 'react'
 
 type Weekly = {

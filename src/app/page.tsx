@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 
-const OrbitList = dynamic(() => import('@/components/orbits/orbitList'), {
+const OrbitList = dynamic(() => import('@/components/orbits/OrbitList'), {
     ssr: false,
 })
 

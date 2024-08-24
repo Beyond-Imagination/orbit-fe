@@ -2,7 +2,7 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import { faker } from '@faker-js/faker'
 
-import ErrorAlert from './error'
+import ErrorAlert from './Error'
 
 describe('ErrorAlert', () => {
     it('renders a heading', () => {

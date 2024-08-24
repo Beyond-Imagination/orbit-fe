@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { useState } from 'react'
 
-import Orbit from '@/components/orbits/orbit'
+import Orbit from '@/components/orbits/Orbit'
 import { IOrbit } from '@/types'
 
 jest.mock('react', () => ({
@@ -9,8 +9,8 @@ jest.mock('react', () => ({
     useState: jest.fn(),
 }))
 
-jest.mock('@/components/orbits/orbitUpdate', () => () => <div>OrbitUpdate</div>)
-jest.mock('@/components/orbits/orbitRead', () => () => <div>OrbitRead</div>)
+jest.mock('@/components/orbits/OrbitUpdate', () => () => <div>OrbitUpdate</div>)
+jest.mock('@/components/orbits/OrbitRead', () => () => <div>OrbitRead</div>)
 
 describe('Orbit', () => {
     const useStateMock = useState as jest.Mock

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
 import { IOrbit } from '@/types'
-import OrbitRead from '@/components/orbits/orbitRead'
-import OrbitUpdate from '@/components/orbits/orbitUpdate'
+import OrbitRead from '@/components/orbits/OrbitRead'
+import OrbitUpdate from '@/components/orbits/OrbitUpdate'
 
 interface OrbitProps {
     orbit: IOrbit

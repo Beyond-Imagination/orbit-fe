@@ -1,61 +1,68 @@
-import { ChangeEvent, useState } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
-import OrbitCronInput from '@/components/orbits/OrbitCronInput'
-import { IPostOrbitRequest } from '@/types'
-import { postOrbit } from '@/api/orbit'
+import { SubmitHandler, useForm, FormProvider } from 'react-hook-form'
+
+import { IOrbit, IPutOrbitRequest } from '@/types'
 import { Check, Stop } from '@/icon'
-import AddButton from '@/components/orbits/addButton'
-import ErrorAlert from '@/components/alerts/error'
-import OrbitWeeklyInput from '@/components/orbits/OrbitWeeklyInput'
+import { putOrbit } from '@/api/orbit'
+import ErrorAlert from '@/components/alerts/Error'
 import { useCredential } from '@/hooks'
 import Loading from '@/app/loading'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip'
+import OrbitCronInput from '@/components/orbits/OrbitCronInput'
+import OrbitWeeklyInput from '@/components/orbits/OrbitWeeklyInput'
 import { checkChannelNameExists } from '@/api/space'
+
+interface OrbitUpdateProps {
+    orbit: IOrbit
+    setUpdating: Dispatch<SetStateAction<boolean>>
+}
 
 type Inputs = {
     channelName: string
     type: string
     timezone: string
     cron: string
-    message: string
     weekly: {
         days: number[]
         time: string
     }
+    message: string
 }
 
-export default function OrbitAdd() {
+export default function OrbitUpdate({ orbit, setUpdating }: OrbitUpdateProps) {
     const credential = useCredential()
-    const methods = useForm<Inputs>()
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset,
-    } = methods
-    const [adding, setAdding] = useState<boolean>(false)
-    const [inputType, setInputType] = useState<string>('cron')
-    const onChangeType = (e: ChangeEvent<HTMLSelectElement>) => {
-        setInputType(e.target.value)
-    }
-
-    const timezoneList = Intl.supportedValuesOf('timeZone')
-    const errorMessage: string | undefined =
-        errors?.channelName?.message || errors?.cron?.message || errors?.message?.message || errors?.weekly?.message
-
     const queryClient = useQueryClient()
     const mutation = useMutation({
-        mutationFn: (body: IPostOrbitRequest) => {
-            return postOrbit(body)
+        mutationFn: (body: IPutOrbitRequest) => {
+            return putOrbit(body)
         },
         onSuccess: async () => {
-            reset()
-            setAdding(false)
             await queryClient.invalidateQueries({ queryKey: ['orbits'] })
+            setUpdating(false)
         },
     })
+
+    const methods = useForm<Inputs>({
+        defaultValues: {
+            channelName: orbit.channelName,
+            type: orbit.type,
+            timezone: orbit.timezone,
+            cron: orbit.cron,
+            weekly: orbit.weekly,
+            message: orbit.message,
+        },
+    })
+    const {
+        register,
+        watch,
+        handleSubmit,
+        formState: { errors },
+    } = methods
+
+    const timezoneList = Intl.supportedValuesOf('timeZone')
+    const errorMessage: string | undefined = errors?.channelName?.message || errors?.cron?.message || errors?.message?.message
 
     const convertToCronExpression = (days: number[], time: string): string => {
         const [hours, minutes] = time.split(':')
@@ -66,15 +73,18 @@ export default function OrbitAdd() {
     }
 
     const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
-        const request: IPostOrbitRequest = {
+        const request: IPutOrbitRequest = {
             body: {
                 channelName: data.channelName,
                 type: data.type,
                 timezone: data.timezone,
                 cron: data.type === 'cron' ? data.cron : convertToCronExpression(data.weekly.days, data.weekly.time),
-                weekly: data.type === 'weekly' ? data.weekly : undefined,
+                weekly: data.weekly,
                 message: data.message,
                 serverUrl: credential.serverUrl,
+            },
+            uri: {
+                id: orbit._id,
             },
             secret: {
                 token: credential.token,
@@ -83,24 +93,20 @@ export default function OrbitAdd() {
         mutation.mutate(request)
     }
 
-    if (!adding) {
-        return <AddButton setAdding={setAdding} />
-    }
-
     return (
-        <div className=" border-2 border-[#9C4A98] rounded p-2 w-full">
+        <div className="flex flex-col gap-2">
             {mutation.isPending && <Loading />}
             <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex justify-between">
                         <div className="basis-10/12 flex gap-6">
                             <div className="w-44">
-                                <label htmlFor="add/ChannelNameInput" className="text-lg font-semibold">
+                                <label htmlFor={`${orbit._id}/ChannelNameInput`} className="text-lg font-semibold">
                                     Channel Name
                                     <input
-                                        id="add/ChannelNameInput"
+                                        id={`${orbit._id}/ChannelNameInput`}
                                         className="border rounded w-full p-1"
-                                        placeholder="your channel name"
+                                        value={watch('channelName')}
                                         {...register('channelName', {
                                             required: 'existing channel name is required',
                                             validate: channelName =>
@@ -110,44 +116,44 @@ export default function OrbitAdd() {
                                 </label>
                             </div>
                             <div className="w-32">
-                                <label htmlFor="add/TypeSelect" className="text-lg font-semibold">
+                                <label htmlFor={`${orbit._id}/TypeSelect`} className="text-lg font-semibold">
                                     Type
                                     <select
-                                        id="add/TypeSelect"
+                                        id={`${orbit._id}/TypeSelect`}
                                         className="border rounded w-full p-1"
+                                        defaultValue={watch('type')}
                                         {...register('type', { required: 'type is required' })}
-                                        onChange={onChangeType}
                                     >
                                         <option>cron</option>
                                         <option>weekly</option>
                                     </select>
                                 </label>
                             </div>
-                            <div className="w-44">
-                                <label htmlFor="add/TimezoneSelect" className="text-lg font-semibold">
+                            <div className="w-68">
+                                <label htmlFor={`${orbit._id}/TimezoneSelect`} className="text-lg font-semibold">
                                     timezone
                                     <select
-                                        id="add/TimezoneSelect"
+                                        id={`${orbit._id}/TimezoneSelect`}
                                         className="border rounded w-full p-1"
+                                        defaultValue={watch('timezone')}
                                         {...register('timezone', { required: 'timezone is required' })}
                                     >
                                         {timezoneList.map(value => (
-                                            <option key={`add/${value}`}>{value}</option>
+                                            <option key={`${orbit._id}/${value}`}>{value}</option>
                                         ))}
                                     </select>
                                 </label>
                             </div>
-
-                            {inputType === 'cron' && <OrbitCronInput />}
+                            {watch('type') === 'cron' && <OrbitCronInput />}
                         </div>
                         <div className="basis-2/12">
                             <div className="flex gap-2 justify-end">
                                 <div className="relative">
                                     <button
                                         type="button"
-                                        onClick={() => setAdding(false)}
+                                        onClick={() => setUpdating(false)}
                                         data-tooltip-id="Stop"
-                                        data-tooltip-content="Cancel add orbit message"
+                                        data-tooltip-content="Cancel updating orbit message"
                                         className="w-6 h-6"
                                     >
                                         <Stop />
@@ -155,7 +161,12 @@ export default function OrbitAdd() {
                                     <Tooltip id="Stop" place="top" border="2px solid purple" />
                                 </div>
                                 <div className="relative">
-                                    <button type="submit" data-tooltip-id="Check" data-tooltip-content="Add orbit message" className="w-6 h-6">
+                                    <button
+                                        type="submit"
+                                        data-tooltip-id="Check"
+                                        data-tooltip-content="Save updated orbit message"
+                                        className="w-6 h-6"
+                                    >
                                         <Check />
                                     </button>
                                     <Tooltip id="Check" place="top" border="2px solid purple" />
@@ -164,19 +175,17 @@ export default function OrbitAdd() {
                         </div>
                     </div>
 
-                    {inputType === 'weekly' && <OrbitWeeklyInput />}
+                    {watch('type') === 'weekly' && <OrbitWeeklyInput />}
 
-                    <div>
-                        <label htmlFor="add/MessageTextarea" className="flex flex-col text-lg font-semibold">
-                            message
-                            <textarea
-                                id="add/MessageTextarea"
-                                className="border rounded p-2"
-                                placeholder="write your message"
-                                {...register('message', { required: 'message is required' })}
-                            />
-                        </label>
-                    </div>
+                    <label htmlFor={`${orbit._id}/MessageTextarea`} className="flex flex-col text-lg font-semibold">
+                        message
+                        <textarea
+                            id={`${orbit._id}/MessageTextarea`}
+                            className="border rounded p-2"
+                            value={watch('message')}
+                            {...register('message', { required: 'message is required' })}
+                        />
+                    </label>
                     {errorMessage && <ErrorAlert message={errorMessage} />}
                 </form>
             </FormProvider>
